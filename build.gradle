@@ -11,8 +11,7 @@ repositories {
 
 project.ext.lwjglVersion = "3.3.0"
 project.ext.jomlVersion = "1.10.2"
-project.ext.lwjglVersion = "3.3.0"
-project.ext.lwjglNatives = "natives-macos"
+project.ext.lwjglNatives = "natives-windows"
 
 repositories {
     mavenCentral()

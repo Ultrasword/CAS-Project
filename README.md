@@ -1,4 +1,2 @@
-# CAS-Project
-Gamer CAS Project
-
-######This game was made by Peter, Richard, and Ian
+# WageWar-Java
+Wage war but in java using lwjgl and opengl graphics
