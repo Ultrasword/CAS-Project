@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\peter.zhang\Documents\GitHub\War-Game-Thing\venv"
+VIRTUAL_ENV="C:\Users\peter.zhang\Documents\GitHub\CAS-Project\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
