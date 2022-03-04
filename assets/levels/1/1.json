@@ -1,0 +1,15 @@
+{
+    "level":1,
+    "xrange":4,
+    "yrange":1,
+    "textures":{
+        "1": {
+            "path": "assets/textures/grass.png",
+            "solid": 1
+        },
+        "2": {
+            "path": "assets/textures/dirt.png",
+            "solid": 0
+        }
+    }
+}

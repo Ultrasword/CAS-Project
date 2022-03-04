@@ -1,0 +1,20 @@
+{
+    "animation":{
+        "idle":{
+            "images": ["miku_idle0.png","miku_idle1.png","miku_idle2.png","miku_idle3.png"],
+            "frametime": [0.15,0.15,0.15,0.15]
+        },
+        "run":{
+            "images":["miku_run0.png","miku_run1.png","miku_run2.png","miku_run3.png","miku_run4.png","miku_run5.png","miku_run6.png","miku_run7.png","miku_run8.png"],
+            "frametime": [0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15]
+        },
+        "walk":{
+            "images":["miku_walk0.png","miku_walk1.png","miku_walk2.png","miku_walk3.png","miku_walk4.png","miku_walk5.png"],
+            "frametime": [0.15,0.15,0.15,0.15,0.15,0.15]
+        },
+        "attack":{
+            "images": ["miku_attack0.png","miku_attack1.png","miku_attack2.png","miku_attack3.png","miku_attack4.png","miku_attack5.png","miku_attack6.png","miku_attack7.png","miku_attack8.png","miku_attack9.png","miku_attack10.png"],
+            "frametime": [0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15]
+        }
+    }
+}

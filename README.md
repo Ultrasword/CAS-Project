@@ -1,2 +1,4 @@
-# WageWar-Java
-Wage war but in java using lwjgl and opengl graphics
+# War-Game-Thing
+## Very Fun Game
+- thats about it :D
+- for now ofc
