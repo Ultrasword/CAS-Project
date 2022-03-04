@@ -1,8 +1,7 @@
 package com.engine.hardware;
 
-import com.engine.Camera;
+import com.engine.graphics.Camera;
 import com.engine.comp.SpriteRenderer;
-import com.engine.event.EventHandlerPool;
 import com.engine.graphics.Renderer;
 import com.engine.graphics.Shader;
 import com.engine.graphics.SpriteSheet;

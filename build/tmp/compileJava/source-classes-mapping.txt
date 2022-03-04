@@ -10,10 +10,10 @@ com/engine/graphics/VBOobject.java
  com.engine.graphics.VBOobject
 com/engine/comp/Component.java
  com.engine.comp.Component
-com/engine/graphics/SpriteSheet.java
- com.engine.graphics.SpriteSheet
 com/engine/event/EndThread.java
  com.engine.event.EndThread
+com/engine/graphics/SpriteSheet.java
+ com.engine.graphics.SpriteSheet
 com/engine/graphics/Texture.java
  com.engine.graphics.Texture
 com/engine/graphics/UI/UICamera.java
@@ -22,18 +22,16 @@ com/engine/comp/ColourBi.java
  com.engine.comp.ColourBi
 com/engine/event/NoEvents.java
  com.engine.event.NoEvents
-com/engine/Camera.java
- com.engine.Camera
-com/engine/event/DirtyEvent.java
- com.engine.event.DirtyEvent
+com/engine/event/EventHandlerPool.java
+ com.engine.event.EventHandlerPool
 com/war/War.java
  com.war.War
-com/engine/handler/Object.java
- com.engine.handler.Object
 com/engine/comp/ColourMono.java
  com.engine.comp.ColourMono
-com/engine/hardware/MouseListener.java
- com.engine.hardware.MouseListener
+com/engine/event/EventHandler.java
+ com.engine.event.EventHandler
+com/engine/handler/Object.java
+ com.engine.handler.Object
 com/engine/graphics/VBOs/VertexBuffer.java
  com.engine.graphics.VBOs.VertexBuffer
 com/engine/graphics/UI/UIObject.java
@@ -44,18 +42,22 @@ com/engine/event/Event.java
  com.engine.event.Event
 com/engine/event/EventQueue.java
  com.engine.event.EventQueue
+com/engine/graphics/Camera.java
+ com.engine.graphics.Camera
 com/engine/handler/SceneHandler.java
  com.engine.handler.SceneHandler
 com/engine/comp/Sprite.java
  com.engine.comp.Sprite
-com/engine/handler/GameObject.java
- com.engine.handler.GameObject
+com/war/Test.java
+ com.war.Test
 com/engine/graphics/Shader.java
  com.engine.graphics.Shader
-com/engine/handler/Entities/GameEntity2D.java
- com.engine.handler.Entities.GameEntity2D
+com/engine/handler/GameObject.java
+ com.engine.handler.GameObject
 com/engine/graphics/Renderer.java
  com.engine.graphics.Renderer
+com/engine/handler/Entities/GameEntity2D.java
+ com.engine.handler.Entities.GameEntity2D
 com/engine/handler/EntityHandler.java
  com.engine.handler.EntityHandler
 com/engine/hardware/Window.java
@@ -68,9 +70,7 @@ com/engine/handler/Scene.java
  com.engine.handler.Scene
 com/engine/utils/FileHandler.java
  com.engine.utils.FileHandler
-com/war/Test.java
- com.war.Test
-com/engine/event/EventHandlerPool.java
- com.engine.event.EventHandlerPool
-com/engine/event/EventHandler.java
- com.engine.event.EventHandler
+com/engine/event/DirtyEvent.java
+ com.engine.event.DirtyEvent
+com/engine/hardware/MouseListener.java
+ com.engine.hardware.MouseListener

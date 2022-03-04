@@ -1,6 +1,6 @@
 package com.engine.handler;
 
-import com.engine.Camera;
+import com.engine.graphics.Camera;
 
 public abstract class Scene {
 

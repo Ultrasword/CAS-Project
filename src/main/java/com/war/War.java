@@ -6,7 +6,7 @@ import com.engine.hardware.Window;
 public class War {
 
     public static void main(String[] args) {
-        EventHandlerPool eventHandler = EventHandlerPool.getInstance(2);
+        // EventHandlerPool eventHandler = EventHandlerPool.getInstance(2);
         Window window = Window.get();
         window.init();
     

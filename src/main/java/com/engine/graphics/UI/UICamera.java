@@ -1,6 +1,6 @@
 package com.engine.graphics.UI;
 
-import com.engine.Camera;
+import com.engine.graphics.Camera;
 import com.engine.graphics.VBOs.UIVBO;
 import org.joml.Vector3f;
 
