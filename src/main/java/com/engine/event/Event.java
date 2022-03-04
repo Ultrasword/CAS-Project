@@ -12,6 +12,6 @@ public abstract class Event {
         this.type = type;
     }
 
-    public abstract void handleEvent();
+    public abstract void handleEvent() throws InterruptedException;
 
 }

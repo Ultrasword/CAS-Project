@@ -17,20 +17,19 @@ public class EventHandlerPool {
     public void start(){
         for(int i = 0; i < this.threadCount; i++) {
             this.threads[i].start();
-            this.threads[i].run();
         }
     }
 
-    public void endThreads() throws InterruptedException {
+    public void endThreads(long time) throws InterruptedException {
         // clear queue
         EventQueue.clearQueue();
-        // join threads
-        for(int i = 0; i < this.threadCount; i++)
-            this.threads[i].thread.join();
         // add events
         for(int i = 0; i < this.threadCount; i++)
             // the idea is to upload some thread end tasks
             EventQueue.addEvent(new EndThread());
+        for(int i = 0; i < this.threadCount; i++){
+            this.threads[i].join(time);
+        }
     }
 
     public void deleteFromExistence(){

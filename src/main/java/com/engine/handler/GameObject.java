@@ -11,19 +11,31 @@ public class GameObject {
 
     public static long id = 0;
 
-    protected Vector3f position;
+    protected Transform2D transform;
     protected HashMap<String, Component> components;
-    private boolean inVBO, dirty;
-    private int VBOindex;
+    private boolean inVBO, dirty, dead;
+    private int VBOindex, inVertexPosition;
     private long uid;
 
     public GameObject(){
-        inVBO = false;
-        components = new HashMap<>();
-        uid = getID();
+        this.inVBO = false;
+        this.dead = false;
+        this.components = new HashMap<>();
+        this.uid = getID();
+        this.transform = new Transform2D();
     }
 
-    protected void update(float dt){
+    public Transform2D getTransform() {
+        return transform;
+    }
+
+    public void setTransform(Transform2D transform) {
+        this.transform = transform;
+    }
+
+    public void update(float dt){}
+
+    protected void updateComponents(float dt){
         for(String comp : components.keySet()){
             components.get(comp).update(dt);
         }
@@ -40,15 +52,24 @@ public class GameObject {
     }
 
     public <T extends Component> void addComponent(T component){
+        component.setUid(this.getUID());
+        component.setVboIndex(this.getVBOindex());
         components.put(component.getClass().getName(), component);
     }
 
+    public void start(){
+        this.transform.setGameObject(this);
+        for(Component component : this.components.values()){
+            component.start();
+        }
+    }
+
     public void checkIfDirty(){
-        if(isInVBO())
-            if(this.dirty){
-                EventQueue.addEvent(new DirtyEvent(this.getUID(), this.getVBOindex()));
-                dirty = false;
-            }
+        if(this.inVBO && this.dirty) {
+            SceneHandler.currentScene.getRenderer().getVboArray().get(getVBOindex()).addDirtySprite(this);
+//            EventQueue.addEvent(new DirtyEvent(this.getUID(), this.getVBOindex()));
+            dirty = false;
+        }
     }
 
     protected boolean isDirty(){
@@ -59,7 +80,7 @@ public class GameObject {
         this.dirty = false;
     }
 
-    protected void Dirty(){
+    protected void setDirty(){
         this.dirty = true;
     }
 
@@ -73,6 +94,10 @@ public class GameObject {
 
     public void setVBOindex(int i){
         this.VBOindex = i;
+        for(Component component : this.components.values()){
+            component.setUid(this.getUID());
+            component.setVboIndex(this.getVBOindex());
+        }
     }
 
     public int getVBOindex(){
@@ -87,4 +112,19 @@ public class GameObject {
         return this.uid;
     }
 
+    public int getInVertexPosition() {
+        return inVertexPosition;
+    }
+
+    public void setInVertexPosition(int inVertexPosition) {
+        this.inVertexPosition = inVertexPosition;
+    }
+
+    public boolean isDead() {
+        return dead;
+    }
+
+    public void setDead(boolean dead) {
+        this.dead = dead;
+    }
 }

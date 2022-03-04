@@ -1,5 +1,7 @@
 package com.engine.graphics;
 
+import com.engine.handler.GameObject;
+
 public abstract class VBOobject {
     protected int rendererID = 0; // 0 means it is not in a renderer
 
@@ -12,6 +14,8 @@ public abstract class VBOobject {
     public abstract void render();
     public abstract void howToRender();
     public abstract void clean();
+    public abstract <T extends GameObject> int addGameObject(T gameObject);
+    public abstract void removeGameObject(int itemSlot);
 
     public int getRendererID() {
         return rendererID;

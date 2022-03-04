@@ -6,7 +6,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 public class MouseListener {
     private static MouseListener instance;
     private double scrollX, scrollY;
-    private double xPos, yPos, lastY, lastX;
+    private double xPos, yPos, lastY, lastX, moveX, moveY;
     private boolean mouseButtonPressed[] = new boolean[3];
     private boolean isDragging;
 
@@ -17,6 +17,8 @@ public class MouseListener {
         this.yPos = 0.0;
         this.lastX = 0.0;
         this.lastY = 0.0;
+        this.moveX = 0.0;
+        this.moveY = 0.0;
     }
 
     public static MouseListener get() {
@@ -53,7 +55,14 @@ public class MouseListener {
         get().scrollY = yOffset;
     }
 
+    public static void startInput(){
+        endFrame(); // sets move to 0
+        endFrame();
+    }
+
     public static void endFrame() {
+        get().moveX = get().xPos - get().lastX;
+        get().moveY = get().yPos - get().lastY;
         get().scrollX = 0;
         get().scrollY = 0;
         get().lastX = get().xPos;
@@ -94,6 +103,14 @@ public class MouseListener {
 
     public static boolean isDragging() {
         return get().isDragging;
+    }
+
+    public static float getMoveX(){
+        return (float)get().moveX;
+    }
+
+    public double getMoveY() {
+        return moveY;
     }
 
     public static boolean mouseButtonDown(int button) {

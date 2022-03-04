@@ -1,31 +1,21 @@
 package com.engine.hardware;
 
-import com.engine.graphics.Camera;
-import com.engine.comp.SpriteRenderer;
-import com.engine.graphics.Renderer;
-import com.engine.graphics.Shader;
-import com.engine.graphics.SpriteSheet;
-import com.engine.graphics.VBOs.GameEntity2DVBO;
-import com.engine.handler.Entities.GameEntity2D;
-import com.engine.handler.EntityHandler;
 import com.engine.handler.SceneHandler;
-import com.engine.handler.Transform2D;
 import com.engine.utils.FileHandler;
 import com.engine.utils.Time;
-import com.war.scene.Lobby;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.glClearColor;
-
-import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL30.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL30.GL_LESS;
+import static org.lwjgl.opengl.GL30.glDepthFunc;
+import static org.lwjgl.opengl.GL30.glEnable;
+import static org.lwjgl.opengl.GL30.glViewport;
 
 public class Window {
 
@@ -99,34 +89,6 @@ public class Window {
     }
 
     public void loop(){
-        Renderer hax = new Renderer();
-        EntityHandler entityHandler = new EntityHandler();
-        Camera camera = new Camera(width*xratio, height*yratio, new Vector3f(0.0f, 0.0f, -10.0f),
-                1.0f, -1f, 100f, 60f);
-        camera.adjustOrthoProjection();
-        // camera.adjustFrustrumProjection();
-
-        SceneHandler.pushScene(new Lobby());
-        SceneHandler.currentScene.setCamera(camera);
-
-        Shader shader = FileHandler.getShader("/shaders/defaultGameEntityVBO");
-        GameEntity2DVBO renderer = new GameEntity2DVBO(null);
-        renderer.create();
-
-        // spritesheet test
-        SpriteSheet spriteSheet = new SpriteSheet("assets/warriorani.png",
-                64, 64, 20, 0, 0, 0);
-        for(int i = 0; i < 5; i++) {
-            for (int j = 0; j < 4; j++){
-                GameEntity2D spriteSheetTest = new GameEntity2D(new Transform2D(new Vector3f(i*100 + 25*i, j*100 + 25*j, 0),
-                        new Vector2f(100), (i*5 + j)*10f));
-                spriteSheetTest.addComponent(new SpriteRenderer(spriteSheet.getSprite(j*5 + i)));
-                renderer.addGameEntity2D(spriteSheetTest);
-                entityHandler.addGameObject(spriteSheetTest);
-            }
-        }
-
-        hax.addVBO(renderer);
 
         // set clear color
         Time.start();
@@ -137,27 +99,14 @@ public class Window {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            if (KeyListener.isKeyPressed(GLFW_KEY_A))
-                camera.move(-10.f, 0.0f, 0.0f);
-            if (KeyListener.isKeyPressed(GLFW_KEY_D))
-                camera.move(10.0f, 0.0f, 0.0f);
-            if (KeyListener.isKeyPressed(GLFW_KEY_W))
-                camera.move(0.0f, 10.0f, 0.0f);
-            if (KeyListener.isKeyPressed(GLFW_KEY_S))
-                camera.move(0.0f, -10.0f, 0.0f);
-            if (KeyListener.isKeyPressed(GLFW_KEY_K))
-                renderer.removeGameEntity2D(0);
-
-            camera.update();
-
-            entityHandler.update(Time.deltaTime);
-            hax.renderArrays();
+            // update most recent scnee
+            SceneHandler.update(Time.deltaTime);
+            SceneHandler.render();
 
             // swap buffers
             glfwSwapBuffers(glfwWindow);
             Time.update();
         }
-        hax.clean();
     }
 
     public void end(){
@@ -170,6 +119,13 @@ public class Window {
         glfwSetErrorCallback(null).free();
     }
 
+    public float getBaseWidth() {
+        return baseWidth;
+    }
+
+    public float getBaseHeight() {
+        return baseHeight;
+    }
 
     private static void sizeCallback(long window, int w, int h) {
         // get the window

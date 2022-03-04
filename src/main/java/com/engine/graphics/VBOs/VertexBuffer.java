@@ -3,6 +3,7 @@ package com.engine.graphics.VBOs;
 import com.engine.graphics.Shader;
 import com.engine.graphics.Texture;
 import com.engine.graphics.VBOobject;
+import com.engine.handler.GameObject;
 import com.engine.handler.SceneHandler;
 import com.engine.utils.FileHandler;
 import com.engine.utils.Time;
@@ -12,7 +13,7 @@ import java.util.List;
 
 import static org.lwjgl.opengl.GL30.*;
 
-public class VertexBuffer extends VBOobject {
+public abstract class VertexBuffer extends VBOobject {
 
     public final static int FLOAT_BYTES = Float.BYTES;
     public final static int VERTICES_PER_ITEM = 4;
@@ -41,8 +42,10 @@ public class VertexBuffer extends VBOobject {
     protected boolean dirty, indicesWhereMade;
     protected int itemCount, attribCount, texCount;
     protected List<Texture> texSources;
+    protected List<GameObject> dirtySprites;
 
     protected int vaoID, eboID, vboID;
+    protected String validObject;
 
     public VertexBuffer(boolean vertexArray, boolean colorArray, boolean texArray, String shaderPath){
         this.vertexArray = vertexArray;
@@ -60,6 +63,7 @@ public class VertexBuffer extends VBOobject {
         dirty=true;
         indicesWhereMade=false;
         if(shaderPath != null) this.shaderPath = shaderPath;
+        this.dirtySprites = new ArrayList<>();
 
 //        System.out.println(vertexOffset + " " + colorOffset + " " + texOffset + " " + VERTEX_OBJECT_SIZE);
 //        System.out.println(ARRAY_SIZE + " " + ARRAY_BUFFER_SIZE);
@@ -113,7 +117,6 @@ public class VertexBuffer extends VBOobject {
             texSources = new ArrayList<>();
         }
         // other stuff
-        // TODO - you must generate indices
     }
 
     public void update(){
@@ -121,7 +124,9 @@ public class VertexBuffer extends VBOobject {
             System.err.println("ERROR (VertexBuffer.java): You didnt CREATE UR INDICES in one of YOUR VBOs!");
             assert false : "Please make your indices u stupid man; smh";
         }
+        this.cleanDirtySprites();
         if (this.dirty) {
+            // System.out.println("GRAPHICS (VertexBuffer.java): Is dirty");
             glBindBuffer(GL_ARRAY_BUFFER, vboID);
             glBufferSubData(GL_ARRAY_BUFFER, 0, array);
             this.dirty = false;
@@ -162,22 +167,33 @@ public class VertexBuffer extends VBOobject {
         for(int i = 0; i < attribCount; i++)
             glDisableVertexAttribArray(i);
         // unbind the vertex array
+        glBindVertexArray(0);
         // TODO - decide whether or not to unbind the vertex array and the shader
     }
 
-    @Override
-    public void howToRender() {
-        shader.uploadFloat("uTime", Time.getTime());
-        shader.uploadMat4f("proj", SceneHandler.currentScene.getCamera().getProjMatrix());
-        shader.uploadMat4f("view", SceneHandler.currentScene.getCamera().getViewMatrix());
-
-        // render
-        bindShader();
-        bindTextures();
-        render();
-        unbindShader();
-        unbindShader();
+    public void removeGameObject(int itemSlot){
+        int left = itemSlot * VERTEX_OBJECT_SIZE;
+        int right = left + VERTEX_OBJECT_SIZE * 4;
+        System.out.println("Removed at " + itemSlot);
+        // get texID - use this data to change the thing if necassary
+        int texID = (int)array[left+VERTEX_OBJECT_SIZE-1];
+        for(int i = 0; i < right; i++){
+            array[i] = 0;
+        }
+        this.dirty = true;
     }
+
+    public abstract <T extends GameObject> void calculateVertices(T gameObject);
+
+    public void cleanDirtySprites(){
+        // System.out.println(this.dirtySprites.size());
+        for(GameObject object : this.dirtySprites){
+            calculateVertices(object);
+        }
+        this.dirtySprites.clear();
+    }
+
+    public abstract void howToRender();
 
     protected void genIndices(){
         indicesWhereMade = true;
@@ -200,6 +216,9 @@ public class VertexBuffer extends VBOobject {
     }
 
     public void clean(){
+        this.dirtySprites.clear();
+        this.unbindShader();
+        this.unbindTextures();
         glDeleteVertexArrays(vaoID);
         glDeleteBuffers(vboID);
         glDeleteBuffers(eboID);
@@ -229,4 +248,15 @@ public class VertexBuffer extends VBOobject {
         return this.texCount <= TEXTURE_BUFFER_SIZE;
     }
 
+    public String getValidObject() {
+        return validObject;
+    }
+
+    public void setValidObject(String validObject) {
+        this.validObject = validObject;
+    }
+
+    public void addDirtySprite(GameObject gameObject){
+        this.dirtySprites.add(gameObject);
+    }
 }

@@ -1,10 +1,11 @@
 package com.engine.graphics.UI;
 
 import com.engine.graphics.Texture;
+import com.engine.handler.GameObject;
 import com.engine.handler.Transform2D;
 import com.engine.utils.FileHandler;
 
-public class UIObject extends Object {
+public class UIObject extends GameObject {
 
     public final static float[] texCoords = {1f, 0f, 1f, 1f, 0f, 1f, 0f, 0f};
 

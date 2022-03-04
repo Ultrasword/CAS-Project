@@ -1,6 +1,6 @@
 package com.engine.graphics.UI;
 
-import com.engine.graphics.Camera;
+import com.engine.Camera;
 import com.engine.graphics.VBOs.UIVBO;
 import org.joml.Vector3f;
 
@@ -20,7 +20,7 @@ public class UICamera extends Camera {
     }
 
     public void removeUIObject(int itemSlot){
-        uivbo.removeUIObject(itemSlot);
+        uivbo.removeGameObject(itemSlot);
     }
 
     public UIVBO getUivbo(){

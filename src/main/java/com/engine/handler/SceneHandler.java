@@ -12,6 +12,7 @@ public class SceneHandler {
     public static <T extends Scene> void pushScene(T scene){
         sceneStack.push(scene);
         currentScene = scene;
+        scene.start();
     }
 
     public static void update(float dt){
@@ -20,6 +21,13 @@ public class SceneHandler {
 
     public static void render(){
         currentScene.render();
+    }
+
+    public static void clean(){
+        for(Scene scene : sceneStack){
+            scene.clean();
+        }
+        sceneStack.clear();
     }
 
 }

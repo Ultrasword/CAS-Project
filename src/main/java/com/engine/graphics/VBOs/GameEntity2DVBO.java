@@ -3,11 +3,17 @@ package com.engine.graphics.VBOs;
 import com.engine.comp.SpriteRenderer;
 import com.engine.graphics.Texture;
 import com.engine.handler.Entities.GameEntity2D;
+import com.engine.handler.GameObject;
+import com.engine.handler.SceneHandler;
+import com.engine.handler.Transform2D;
 import com.engine.utils.FileHandler;
+import com.engine.utils.Time;
 import org.joml.Math;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_FUNC;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
@@ -31,12 +37,6 @@ public class GameEntity2DVBO extends VertexBuffer {
     }
 
     @Override
-    public void update() {
-        // check if dirty
-        super.update();
-    }
-
-    @Override
     public void bindTextures(){
         // implement binding
         for (int i = 0; i < texSources.size(); i++) {
@@ -54,14 +54,9 @@ public class GameEntity2DVBO extends VertexBuffer {
             texSources.get(i).unbind();
     }
 
-    public int addGameEntity2D(GameEntity2D entity){
-        // check if entity already in a vbo
-        if (entity.isInVBO()) return 0;
-        if (!hasTexSpace()) return 1;
-
-        entity.setInVBO(true);
-        entity.setVBOindex(itemCount);
-
+    @Override
+    public <T extends GameObject> void calculateVertices(T gameObject) {
+        GameEntity2D entity = (GameEntity2D) gameObject;
         Vector3f position = entity.getPosition();
         Vector2f scale = entity.getScale();
         float rot = entity.getRotation();
@@ -71,7 +66,7 @@ public class GameEntity2DVBO extends VertexBuffer {
 
         int texID = renderer != null ? renderer.getTexID() : 0;
         int inShaderTexID = 0;
-        if (renderer != null) {
+        if (renderer != null && !gameObject.isInVBO()) {
             addTexture(FileHandler.getTexture(renderer.getSprite().getPath()));
             for (int i = 0; i < texSources.size(); i++) {
                 if (texSources.get(i).getTexID() == texID) {
@@ -85,7 +80,7 @@ public class GameEntity2DVBO extends VertexBuffer {
 
         // rotate the entity and get the points!
         // loop that GameswithGabe made!
-        int offset = itemCount * VERTICES_PER_ITEM * VERTEX_OBJECT_SIZE;
+        int offset = entity.getInVertexPosition() * VERTICES_PER_ITEM * VERTEX_OBJECT_SIZE;
         float xAdd = .5f, yAdd = .5f;
         float cos = Math.cos(Math.toRadians(rot)), sin = Math.sin(Math.toRadians(rot));
         // order is bottom right, top left, top right, bottom left
@@ -116,8 +111,40 @@ public class GameEntity2DVBO extends VertexBuffer {
             }
             offset += VERTEX_OBJECT_SIZE;
         }
-
         this.dirty = true;
+    }
+
+    @Override
+    public <T extends GameObject> int addGameObject(T gameObject) {
+        if (!(gameObject instanceof GameEntity2D)) return 0;
+        return this.addGameEntity2D(((GameEntity2D) gameObject));
+    }
+
+    @Override
+    public void howToRender() {
+        glEnable(GL_DEPTH_FUNC);
+        shader.uploadFloat("uTime", Time.getTime());
+        shader.uploadMat4f("proj", SceneHandler.currentScene.getCamera().getProjMatrix());
+        shader.uploadMat4f("view", SceneHandler.currentScene.getCamera().getViewMatrix());
+
+        // render
+        bindShader();
+        bindTextures();
+        render();
+        unbindTextures();
+        unbindShader();
+        glEnable(GL_DEPTH_FUNC);
+    }
+
+    public int addGameEntity2D(GameEntity2D entity){
+        // check if entity already in a vbo
+        if (entity.isInVBO()) return 0;
+        if (!hasTexSpace()) return 1;
+
+        entity.setInVBO(true);
+        entity.setVBOindex(this.rendererID);
+        entity.setInVertexPosition(itemCount);
+        calculateVertices(entity);
         itemCount ++;
 
 //        for(int i = 0; i < TEXTURE_BUFFER_SIZE; i++) System.out.print(textures[i]);
@@ -129,18 +156,6 @@ public class GameEntity2DVBO extends VertexBuffer {
         if(!texSources.contains(tex)){
             texSources.add(tex);
         }
-    }
-
-    public void removeGameEntity2D(int itemSlot){
-        // remove all the data from the itemSlot
-        int left = itemSlot * VERTEX_OBJECT_SIZE;
-        int right = left + VERTEX_OBJECT_SIZE * 4;
-        // you can get the texID directly from the array
-        int texID = (int)array[left + VERTEX_OBJECT_SIZE - 1];
-        texRefs[texID]--;
-        for (int i = left; i < right; i++)
-            array[i] = 0;
-        this.dirty = true;
     }
 
 }

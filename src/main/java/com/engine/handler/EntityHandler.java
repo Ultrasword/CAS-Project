@@ -18,8 +18,10 @@ public class EntityHandler {
 
     public void update(float dt){
         for(GameObject gameObject : gameObjectMap.values()){
-            gameObject.update(dt);
-            gameObject.checkIfDirty();
+            if(!gameObject.isDead()){
+                gameObject.update(dt);
+                gameObject.checkIfDirty();
+            }
         }
     }
 
@@ -29,6 +31,14 @@ public class EntityHandler {
 
     public <T extends GameObject> void addGameObject(T object){
         gameObjectMap.put(object.getUID(), object);
+    }
+
+    public void killObject(long uid){
+        this.gameObjectMap.get(uid).setDead(true);
+    }
+
+    public void removeGameobject(long uid){
+        this.gameObjectMap.remove(uid);
     }
 
     public void clean(){

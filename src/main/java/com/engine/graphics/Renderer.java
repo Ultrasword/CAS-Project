@@ -1,22 +1,19 @@
 package com.engine.graphics;
 
+import com.engine.graphics.VBOs.VertexBuffer;
+import com.engine.handler.GameObject;
+
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Renderer {
-    /* TODO - FINISH THIS
-        this class holds all the VBOobjects
-        it also allows you to add different gameobjects to the array
-        this renderer object can hold one subclass of vertexbufferobjects
-        all of them can be rendered
-        a hashmap will hold the items
+    /* TODO - Perfect and find any bugs
      */
 
-    private ConcurrentHashMap<Integer, VBOobject> vboArray; // concurrent to allow multithreaded handling
+    private ConcurrentHashMap<Integer, VertexBuffer> vboArray; // concurrent to allow multithreaded handling
     private int vboCount = 0;
 
     public Renderer(){
         vboArray = new ConcurrentHashMap<>();
-
     }
 
     public void renderArrays(){
@@ -26,14 +23,34 @@ public class Renderer {
         }
     }
 
-    public <T extends VBOobject> void addVBO(T array){
+    public <T extends VertexBuffer> void addVBO(T array){
         vboCount++;
+        array.create();
         this.vboArray.put(vboCount, array);
         array.setRendererID(vboCount);
+        System.out.println("GRAPHICS (Renderer.java): Added Array at position " + vboCount);
     }
 
     public void removeVBO(int id){
         this.vboArray.remove(id);
+    }
+
+    public <T extends GameObject> void addGameObject(T gameObject){
+        int result = 0;
+        for(int i = 1; i <= this.vboCount; i++){
+            result = vboArray.get(i).addGameObject(gameObject);
+            if (result!=0) {
+                gameObject.setInVBO(true);
+                gameObject.setVBOindex(i);
+                System.out.println("GRAPHICS (Renderer.java): Added Entity");
+                break;
+            }
+        }
+        if (result == 0) System.out.println("VBO out of space!");
+    }
+
+    public void removeGameObject(int itemSlot, int vboID){
+        this.vboArray.get(vboID).removeGameObject(itemSlot);
     }
 
     public void clean(){
@@ -42,4 +59,11 @@ public class Renderer {
         }
     }
 
+    public int getVboCount() {
+        return vboCount;
+    }
+
+    public ConcurrentHashMap<Integer, VertexBuffer> getVboArray() {
+        return vboArray;
+    }
 }

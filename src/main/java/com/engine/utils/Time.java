@@ -18,6 +18,7 @@ public class Time {
     public static void update(){
         endTime = getTime();
         deltaTime = endTime - startTime;
+        startTime = endTime;
     }
 
 }

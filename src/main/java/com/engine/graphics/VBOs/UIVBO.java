@@ -3,6 +3,7 @@ package com.engine.graphics.VBOs;
 import com.engine.graphics.Texture;
 import com.engine.graphics.UI.UICamera;
 import com.engine.graphics.UI.UIObject;
+import com.engine.handler.GameObject;
 import com.engine.handler.Transform2D;
 import com.engine.utils.Time;
 import org.joml.Math;
@@ -49,12 +50,9 @@ public class UIVBO extends VertexBuffer {
             texSources.get(i).unbind();
     }
 
-    public int addUIObject(UIObject object){
-        // check if has space
-        if(object.isInVBO()) return 0;
-        // check if its texture is in the buffer already
-        if(!hasTexSpace()) return 1;
-
+    @Override
+    public <T extends GameObject> void calculateVertices(T gameObject) {
+        UIObject object = (UIObject) gameObject;
         // get the transform and the texture from the object
         int texID = object.getTexID();
         Transform2D transform2D = object.getTransform2D();
@@ -103,21 +101,23 @@ public class UIVBO extends VertexBuffer {
         }
 
         this.dirty = true;
-        itemCount ++;
-
-        return 2;
     }
 
-    public void removeUIObject(int itemSlot){
-        // remove all data from that itemSlot
-        // remove all the data from the itemSlot
-        int left = itemSlot * VERTEX_OBJECT_SIZE;
-        int right = left + VERTEX_OBJECT_SIZE * 4;
-        // you can get the texID directly from the array
-        int texID = (int)array[left + VERTEX_OBJECT_SIZE - 1];
-        for (int i = left; i < right; i++)
-            array[i] = 0;
-        this.dirty = true;
+    @Override
+    public <T extends GameObject> int addGameObject(T gameObject) {
+        if (!(gameObject instanceof UIObject)) return 0;
+        return this.addUIObject(((UIObject) gameObject));
+    }
+
+    public int addUIObject(UIObject object){
+        // check if has space
+        if(object.isInVBO()) return 0;
+        // check if its texture is in the buffer already
+        if(!hasTexSpace()) return 0;
+
+        itemCount ++;
+
+        return 1;
     }
 
     @Override
@@ -130,7 +130,7 @@ public class UIVBO extends VertexBuffer {
         bindShader();
         bindTextures();
         render();
-        unbindShader();
+        unbindTextures();
         unbindShader();
         glEnable(GL_DEPTH_FUNC);
     }

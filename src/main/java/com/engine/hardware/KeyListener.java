@@ -25,8 +25,6 @@ public class KeyListener {
         } else if (action == GLFW_RELEASE) {
             get().keyPressed[key] = false;
         }
-        // TODO - remove this
-        // System.out.println(key + " " + action);
     }
 
     public static boolean isKeyPressed(int keyCode) {

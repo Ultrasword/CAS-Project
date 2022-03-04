@@ -1,15 +1,11 @@
 package com.engine.handler.Entities;
 
-import com.engine.event.DirtyEvent;
-import com.engine.event.EventQueue;
 import com.engine.handler.GameObject;
 import com.engine.handler.Transform2D;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 public class GameEntity2D extends GameObject {
-
-    protected Transform2D transform;
 
     public GameEntity2D(){
         super();
@@ -19,13 +15,13 @@ public class GameEntity2D extends GameObject {
         this.transform = transform;
     }
 
-    protected void update(float dt) {
-        setRotation(getRotation()+20*dt);
+    public void update(float dt) {
+        updateComponents(dt);
     }
 
     public void setPosition(Vector3f position){
         transform.setPosition(position);
-        Dirty();
+        setDirty();
     }
 
     public Vector3f getPosition(){
@@ -38,7 +34,7 @@ public class GameEntity2D extends GameObject {
 
     public void setScale(Vector2f scale) {
          transform.setScale(scale);
-         Dirty();
+         setDirty();
     }
 
     public float getRotation() {
@@ -47,7 +43,7 @@ public class GameEntity2D extends GameObject {
 
     public void setRotation(float rotation) {
         transform.setRotation(rotation);
-        Dirty();
+        setDirty();
     }
 
     public Transform2D getTransform(){

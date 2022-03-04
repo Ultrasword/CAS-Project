@@ -1,6 +1,7 @@
 package com.engine.comp;
 
-import com.engine.graphics.Texture;
+import com.engine.event.DirtyEvent;
+import com.engine.event.EventQueue;
 
 public class SpriteRenderer extends Component {
 
@@ -58,6 +59,7 @@ public class SpriteRenderer extends Component {
         this.sprite = sprite;
         this.texID = sprite.getTexID();
         dirty = true;
+        EventQueue.addEvent(new DirtyEvent(this.getUid(), this.getVboIndex()));
         // TODO - event handler system
         // this should send a entity texture change event - and change the texture :D
     }
