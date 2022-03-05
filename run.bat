@@ -1,1 +1,1 @@
-"venv\Scripts\activate" & python "main.py"
+"venv/bin/activate" & python "main.py"
