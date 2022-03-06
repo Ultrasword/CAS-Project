@@ -1,17 +1,33 @@
 import pygame
 
-from engine import window, clock, user_input
+from engine import window, clock, user_input, filehandler, handler, chunk, statehandler, state, entity
 
 # create a window
 window.create_instance("CAS Project", 1280, 720, 0, 32, 0)
 
 background = (255, 255, 255)
 
+
+# ------------- TESTS ----------------------
+s = state.State()
+e = entity.Entity()
+entity.set_entity_properties(100, 100, 100, 100, "assets/unknown.png", e)
+s.handler.add_entity(e)
+
+statehandler.push_state(s)
+
+
+# ------------------------------------------
+
+
+
 clock.start(fps=30)
 running = True
 while running:
     # updates
     window.FRAMEBUFFER.fill(background)
+    statehandler.CURRENT.handler.update_and_render_entities(window.FRAMEBUFFER, clock.delta_time)
+    statehandler.CURRENT.handler.render_chunks(window.FRAMEBUFFER)
 
     # render
     # window.INSTANCE.blit(pygame.transform.scale(window.FRAMEBUFFER, (window.WIDTH, window.HEIGHT)), (0,0))
