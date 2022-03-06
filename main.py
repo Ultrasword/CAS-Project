@@ -15,8 +15,11 @@ entity.set_entity_properties(100, 100, 100, 100, "assets/unknown.png", e)
 s.handler.add_entity(e)
 
 c = chunk.Chunk(0, 0)
-t = chunk.create_tile(0, 0, "assets/unknown.png")
-c.set_tile_at(0, 0, t)
+for x in range(chunk.CHUNK_WIDTH):
+    for y in range(chunk.CHUNK_HEIGHT):
+        t = chunk.create_tile(x, y, "assets/grass.png")
+        c.set_tile_at(x, y, t)
+
 
 s.handler.add_chunk(c)
 # must set chunk to active bc it has not been automated yet

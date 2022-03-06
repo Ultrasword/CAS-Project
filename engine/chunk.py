@@ -23,6 +23,7 @@ CHUNK_BLOCK_COUNT = 256
 class Chunk:
     def __init__(self, x:int, y:int, tilegrid:list = [], blocks:list = []):
         """Create chunk - stores blocks and the environment"""
+        self.textures = {}
         # chunk position
         self.id = f"{x}.{y}"
         self.pos = (x, y)
@@ -31,6 +32,9 @@ class Chunk:
         self.grid = [[0 for i in range(TILE_DATA_LENGTH)] for i in range(CHUNK_WIDTH * CHUNK_HEIGHT)]
         for d in tilegrid:
             index = d[1] * CHUNK_WIDTH + d[0]
+            # check if image was loaded
+            if not self.textures.get(data[TILE_I]):
+                self.textures[data[TILE_I]] = filehandler.scale(filehandler.get_image(data[TILE_I]), (TILE_WIDTH, TILE_WIDTH))
             for i in range(TILE_DATA_LENGTH):
                 self.grid[index][i] = data[i]
         # blocks
@@ -40,7 +44,7 @@ class Chunk:
         """Renders the chunk tilegrid"""
         for tile in self.grid:
             if tile[TILE_I]:
-                window.blit(filehandler.get_image(tile[TILE_I]), (tile[TILE_X]*TILE_WIDTH + offset[0] + self.offset[0],
+                window.blit(self.textures[tile[TILE_I]], (tile[TILE_X]*TILE_WIDTH + offset[0] + self.offset[0],
                     tile[TILE_Y]*TILE_WIDTH + offset[1] + self.offset[1]))
 
     def render_blocks(self, window, offset):
@@ -53,6 +57,8 @@ class Chunk:
     def set_tile_at(self, x, y, tile):
         """set tile at a certian x y position - position is relative to the chunk"""
         index = tile[1] * CHUNK_WIDTH + tile[0]
+        if not self.textures.get(tile[TILE_I]):
+            self.textures[tile[TILE_I]] = filehandler.scale(filehandler.get_image(tile[TILE_I]), (TILE_WIDTH, TILE_WIDTH))
         for i in range(TILE_DATA_LENGTH):
             self.grid[index][i] = tile[i]
 
