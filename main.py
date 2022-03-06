@@ -14,6 +14,14 @@ e = entity.Entity()
 entity.set_entity_properties(100, 100, 100, 100, "assets/unknown.png", e)
 s.handler.add_entity(e)
 
+c = chunk.Chunk(0, 0)
+t = chunk.create_tile(0, 0, "assets/unknown.png")
+c.set_tile_at(0, 0, t)
+
+s.handler.add_chunk(c)
+# must set chunk to active bc it has not been automated yet
+s.handler.active_chunks.append(c.id)
+
 statehandler.push_state(s)
 
 
@@ -26,8 +34,8 @@ running = True
 while running:
     # updates
     window.FRAMEBUFFER.fill(background)
-    statehandler.CURRENT.handler.update_and_render_entities(window.FRAMEBUFFER, clock.delta_time)
-    statehandler.CURRENT.handler.render_chunks(window.FRAMEBUFFER)
+    statehandler.CURRENT.handler.update_and_render_entities(window.FRAMEBUFFER, clock.delta_time, (0,0)) # TODO - same here
+    statehandler.CURRENT.handler.render_chunks(window.FRAMEBUFFER, (0,0))       # TODO - add camera thing
 
     # render
     # window.INSTANCE.blit(pygame.transform.scale(window.FRAMEBUFFER, (window.WIDTH, window.HEIGHT)), (0,0))

@@ -17,13 +17,13 @@ class Handler:
     def add_chunk(self, chunk):
         self.world[chunk.id] = chunk
     
-    def update_and_render_entities(self, window, dt):
+    def update_and_render_entities(self, window, dt, offset):
         for entity in self.entities.values():
             entity.update(dt)
-            entity.render(window)
+            entity.render(window, offset)
     
-    def render_chunks(self, window):
+    def render_chunks(self, window, offset):
         for a in self.active_chunks:
-            self.world[a].render_grid(window)
-            self.world[a].render_blocks(window)
+            self.world[a].render_grid(window, offset)
+            self.world[a].render_blocks(window, offset)
 

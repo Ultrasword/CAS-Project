@@ -24,23 +24,24 @@ class Chunk:
     def __init__(self, x:int, y:int, tilegrid:list = [], blocks:list = []):
         """Create chunk - stores blocks and the environment"""
         # chunk position
+        self.id = f"{x}.{y}"
         self.pos = (x, y)
         self.offset = (x*TILE_WIDTH*CHUNK_WIDTH, y*TILE_WIDTH*CHUNK_HEIGHT)
         # grid - for placing blocks :D
-        self.grid = [[0 for i in range(CHUNK_DATA_LENGTH)] for i in range(CHUNK_WIDTH * CHUNK_HEIGHT)]
+        self.grid = [[0 for i in range(TILE_DATA_LENGTH)] for i in range(CHUNK_WIDTH * CHUNK_HEIGHT)]
         for d in tilegrid:
             index = d[1] * CHUNK_WIDTH + d[0]
-            for i in range(CHUNK_DATA_LENGTH):
+            for i in range(TILE_DATA_LENGTH):
                 self.grid[index][i] = data[i]
         # blocks
         self.blocks = []
     
     def render_grid(self, window, offset):
         """Renders the chunk tilegrid"""
-        for tile in self.tiles:
+        for tile in self.grid:
             if tile[TILE_I]:
-                window.blit(filehandler.get_image(tile[TILE_I], (tile[TILE_X]*TILE_WIDTH + offset[0] + self.offset[0],
-                    tile[TILE_Y]*TILE_WIDTH + offset[1] + self.offset[1])))
+                window.blit(filehandler.get_image(tile[TILE_I]), (tile[TILE_X]*TILE_WIDTH + offset[0] + self.offset[0],
+                    tile[TILE_Y]*TILE_WIDTH + offset[1] + self.offset[1]))
 
     def render_blocks(self, window, offset):
         """Renders the chunk blocks"""
@@ -53,7 +54,7 @@ class Chunk:
         """set tile at a certian x y position - position is relative to the chunk"""
         index = tile[1] * CHUNK_WIDTH + tile[0]
         for i in range(TILE_DATA_LENGTH):
-            self.data[index][i] = tile[i]
+            self.grid[index][i] = tile[i]
 
 
 def create_block(x, y, img, w, h, collidable=0):

@@ -35,8 +35,8 @@ class Entity(object):
     def update(self, dt):
         pass
 
-    def render(self, window):
-        window.blit(self.image, self.pos)
+    def render(self, window, offset):
+        window.blit(self.image, (self.pos[0] + offset[0], self.pos[1] + offset[1]))
 
 
 def set_entity_properties(x, y, w, h, img, entity):
