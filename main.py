@@ -3,15 +3,19 @@ import pygame
 from engine import window, clock, user_input
 
 # create a window
-window.create_instance("CAS Project", 1280, 720, pygame.RESIZABLE, 32, 1)
+window.create_instance("CAS Project", 1280, 720, 0, 32, 0)
 
+background = (255, 255, 255)
 
 clock.start(fps=30)
 running = True
 while running:
     # updates
+    window.FRAMEBUFFER.fill(background)
 
     # render
+    # window.INSTANCE.blit(pygame.transform.scale(window.FRAMEBUFFER, (window.WIDTH, window.HEIGHT)), (0,0))
+    window.INSTANCE.blit(window.FRAMEBUFFER, (0,0))
     pygame.display.flip()
 
     # for loop through events
