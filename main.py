@@ -37,8 +37,10 @@ running = True
 while running:
     # updates
     window.FRAMEBUFFER.fill(background)
-    statehandler.CURRENT.handler.update_and_render_entities(window.FRAMEBUFFER, clock.delta_time, (0,0)) # TODO - same here
+    
+    # render world and update stuff
     statehandler.CURRENT.handler.render_chunks(window.FRAMEBUFFER, (0,0))       # TODO - add camera thing
+    statehandler.CURRENT.handler.update_and_render_entities(window.FRAMEBUFFER, clock.delta_time, (0,0)) # TODO - same here
 
     # render
     # window.INSTANCE.blit(pygame.transform.scale(window.FRAMEBUFFER, (window.WIDTH, window.HEIGHT)), (0,0))
