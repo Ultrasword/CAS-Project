@@ -6,6 +6,7 @@ import pygame
 images = {}
 
 def get_image(img):
+    """get and image"""
     if not images.get(img):
         image = pygame.image.load(img).convert()
         images[img] = image
@@ -13,6 +14,7 @@ def get_image(img):
 
 
 def scale(img, size):
+    """scale images"""
     return pygame.transform.scale(img, size)
 
 

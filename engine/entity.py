@@ -3,6 +3,7 @@ from . import filehandler
 object_count = 0
 
 def create_object_id():
+    """generate unique global id"""
     global object_count
     object_count += 1
     return object_count
@@ -10,11 +11,13 @@ def create_object_id():
 
 class object:
     def __init__(self):
+        """object class Constructor"""
         self.id = create_object_id()
 
 
 class Entity(object):
     def __init__(self):
+        """Entity class Constructor"""
         super().__init__()
         
         # for collisions and stuff
@@ -36,10 +39,12 @@ class Entity(object):
         pass
 
     def render(self, window, offset):
+        """Render entity"""
         window.blit(self.image, (self.pos[0] + offset[0], self.pos[1] + offset[1]))
 
 
 def set_entity_properties(x, y, w, h, img, entity):
+    """Set entity properties - position, area, img"""
     if x:
         entity.pos[0] = x
     if y:
@@ -50,5 +55,4 @@ def set_entity_properties(x, y, w, h, img, entity):
         entity.area[1] = h
     if img:
         entity.image = filehandler.get_image(img)
-
 

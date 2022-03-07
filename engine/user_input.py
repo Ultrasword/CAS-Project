@@ -66,6 +66,7 @@ def get_mouse_pos():
 
 
 def update_ratio(width, height, o_width, o_height):
+    """update the screen ratio to get accurate mouse coordinates"""
     global x_ratio, y_ratio
     x_ratio = o_width / width
     y_ratio = o_height / height

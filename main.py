@@ -1,6 +1,11 @@
 import pygame
 
 from engine import window, clock, user_input, filehandler, handler, chunk, statehandler, state, entity
+from game.entities import player
+
+
+# for import tests
+# exit()
 
 # create a window
 window.create_instance("CAS Project", 1280, 720, 0, 32, 0)
@@ -29,7 +34,6 @@ statehandler.push_state(s)
 
 
 # ------------------------------------------
-
 
 
 clock.start(fps=30)
