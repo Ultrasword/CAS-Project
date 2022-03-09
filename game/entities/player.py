@@ -1,6 +1,6 @@
 import json
 
-from engine import entity
+from engine import entity, filehandler, animation
 
 
 # if we want different types of characters in our game we can use this
@@ -13,6 +13,18 @@ class PlayerType:
         self.path = path
         # load the data from the json
         # format.txt in assets/playertypes/
+        self.animations = {}
+        with open(path, 'r') as file:
+            data = json.load(file)
+            file.close()
+        self.name = data["name"]
+        self.health = data["stats"]["health"]
+        self.speed = data["stats"]["speed"]
+        self.strength = data["stats"]["strength"]
+        # load animations
+        for ani in data["animation"]:
+            self.animations[ani] = animation.AnimationData(data["animation"][ani]["frames"], 
+                        data["animation"][ani]["size"], data["animation"][ani]["frame_time"])
 
 
 class Player(entity.Entity):

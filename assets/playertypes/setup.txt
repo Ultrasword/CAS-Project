@@ -21,7 +21,7 @@ Example:
         "strength": 10
     },
     "animation":{
-        # filepath will be "assets/animations/{ani_name}/{frame}"
+        # filepath will be "assets/animations/{name}/{ani_name}/{frame}"
         "idle": {
             "frames":["img_1.png"],
             "frame_time": [0.1]

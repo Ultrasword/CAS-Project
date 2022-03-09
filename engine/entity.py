@@ -35,6 +35,9 @@ class Entity(object):
         self.motion = [0, 0]
         self.c_move = [0, 0]
 
+        # animation related things
+        self.aid = 0
+
     def update(self, dt):
         pass
 

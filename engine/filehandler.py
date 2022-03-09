@@ -13,6 +13,11 @@ def get_image(img):
     return images[img]
 
 
+def get_image_without_cache(img):
+    """get image wihtout cache or convert"""
+    return pygame.image.load(img).convert()
+
+
 def scale(img, size):
     """scale images"""
     return pygame.transform.scale(img, size)
