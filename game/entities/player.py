@@ -8,7 +8,7 @@ player_specs = {}
 
 
 class PlayerType:
-    def __init__(self, path):
+    def __init__(self, path, basepath="assets/"):
         """Creates new playertype object - stores data on different characters"""
         self.path = path
         # load the data from the json
@@ -24,7 +24,7 @@ class PlayerType:
         # load animations
         for ani in data["animation"]:
             self.animations[ani] = animation.AnimationData(data["animation"][ani]["frames"], 
-                        data["animation"][ani]["size"], data["animation"][ani]["frame_time"])
+                        data["animation"][ani]["size"], data["animation"][ani]["frame_time"], base_folder=basepath)
 
 
 class Player(entity.Entity):
@@ -33,9 +33,9 @@ class Player(entity.Entity):
         super().__init__()
 
 
-def load_player_spec(path):
+def load_player_spec(path, base_folder="assets/"):
     """Loads player specs from json file"""
-    PlayerType(path)
+    PlayerType(path, base_folder)
 
 
 def create_player(player_type: str):

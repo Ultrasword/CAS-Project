@@ -14,6 +14,11 @@ background = (255, 255, 255)
 
 
 # ------------- TESTS ----------------------
+
+# load player types
+player.load_player_spec("assets/playertypes/basic.json", base_folder="assets/animations/")
+
+
 s = state.State()
 e = entity.Entity()
 entity.set_entity_properties(100, 100, 100, 100, "assets/unknown.png", e)

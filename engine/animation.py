@@ -1,16 +1,16 @@
-
+from . import filehandler
 
 
 
 class AnimationData:
-    def __init__(self, images, size, frame_time):
+    def __init__(self, images, size, frame_time, base_folder="assets/"):
         """Constructor for animation data storing object"""
         self.frames = []
         self.f_count = len(images)-1
         self.size = size
         # load images with pygame
         for img in images:
-            self.frames.append(filehandler.scale(filehandler.get_image_without_cache(img), size))
+            self.frames.append(filehandler.scale(filehandler.get_image_without_cache(base_folder + img), size))
         # then save frame times
         self.frame_time = frame_time
 
