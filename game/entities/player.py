@@ -65,9 +65,13 @@ class Player(entity.Entity):
     
     def update(self, dt):
         if user_input.is_key_pressed(pygame.K_d):
-            self.motion[0] += 100 * dt
+            self.motion[0] += WALK_SPEED * dt
         if user_input.is_key_pressed(pygame.K_a):
-            self.motion[0] -= 100 * dt
+            self.motion[0] -= WALK_SPEED * dt
+        if user_input.is_key_pressed(pygame.K_s):
+            self.motion[1] += WALK_SPEED * dt
+        if user_input.is_key_pressed(pygame.K_w):
+            self.motion[1] -= WALK_SPEED * dt
         
         # yes
         self.update_position()

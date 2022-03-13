@@ -13,6 +13,8 @@ FLAGS = 0
 DEPTH = 0
 VSYNC = 0
 
+GLOBAL_CLOCK = None
+
 # framebuffer scale and stuff
 XSCALE, YSCALE = 1, 1
 
@@ -49,4 +51,9 @@ def handle_resize(resize_event):
     PREV_WIDTH, PREV_HEIGHT = WIDTH, HEIGHT
     WIDTH, HEIGHT = resize_event.x, resize_event.y
 
+
+def create_clock(FPS):
+    """Creates a pygame clock object"""
+    global GLOBAL_CLOCK
+    GLOBAL_CLOCK = pygame.time.Clock()
 

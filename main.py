@@ -18,20 +18,21 @@ player.load_player_module()
 p = player.Player(100, 100)
 
 s = state.State()
-e = entity.Entity()
-entity.set_entity_properties(100, 100, 100, 100, "assets/unknown.png", e)
-s.handler.add_entity(e)
+# e = entity.Entity()
+# entity.set_entity_properties(100, 100, 100, 100, "assets/unknown.png", e)
+# s.handler.add_entity(e)
 s.handler.add_entity(p)
 
 
 c = chunk.Chunk(0, 0)
-for x in range(chunk.CHUNK_WIDTH):
-    for y in range(chunk.CHUNK_HEIGHT):
-        t = chunk.create_tile(x, y, "assets/grass.png")
-        c.set_tile_at(x, y, t)
-
-
+# for x in range(chunk.CHUNK_WIDTH):
+#     for y in range(chunk.CHUNK_HEIGHT):
+#         t = chunk.create_tile(x, y, "assets/grass.png")
+#         c.set_tile_at(x, y, t)
 s.handler.add_chunk(c)
+
+
+
 # must set chunk to active bc it has not been automated yet
 s.handler.active_chunks.append(c.id)
 
@@ -42,6 +43,7 @@ statehandler.push_state(s)
 
 
 clock.start(fps=30)
+window.create_clock(clock.FPS)
 running = True
 while running:
     # updates
@@ -87,5 +89,6 @@ while running:
 
     # update clock
     clock.update()
+    window.GLOBAL_CLOCK.tick(clock.FPS)
 
 pygame.quit()
