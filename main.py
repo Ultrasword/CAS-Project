@@ -23,6 +23,8 @@ s = state.State()
 # s.handler.add_entity(e)
 s.handler.add_entity(p)
 
+s.handler.add_entity(player.Player(200, 200))
+
 
 c = chunk.Chunk(0, 0)
 # for x in range(chunk.CHUNK_WIDTH):

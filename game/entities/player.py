@@ -38,9 +38,8 @@ def load_player_module():
     player_size = data["player size"]
     image_path = data["image path"]
     for name, anidata in data["animations"].items():
-        w, h = anidata["width"], anidata["height"]
         # create the animation block
-        data_block = animation.AnimationData(anidata["images"], (w,h), anidata["time"])
+        data_block = animation.AnimationData(anidata["images"], (player_size[0], player_size[1]), anidata["time"])
         # now store it in the cache
         player_animations[name] = animation.AnimationHandler(data_block)
 
@@ -64,6 +63,11 @@ class Player(entity.Entity):
         self.health = 0
     
     def update(self, dt):
+        # update animation
+        if player_animations[self.state].update_registry(self.aid, dt):
+            self.image = player_animations[self.state].get_frame(self.aid)
+        
+
         if user_input.is_key_pressed(pygame.K_d):
             self.motion[0] += WALK_SPEED * dt
         if user_input.is_key_pressed(pygame.K_a):

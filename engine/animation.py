@@ -37,6 +37,7 @@ class AnimationHandler:
             self.registries[aid].frame += 1
             if self.registries[aid].frame > self.ani_data.f_count:
                 self.registries[aid].frame = 0
+            return True
 
     def get_frame(self, aid):
         """Get a specific frame for a specific entity"""
