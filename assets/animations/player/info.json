@@ -1,0 +1,18 @@
+{
+    "player size": [32, 32],
+    "image path": "assets/animations/player/",
+    "animations": {
+        "idle": {
+            "width": 32,
+            "height": 32,
+            "images": ["grass.png"],
+            "time": [0.1]
+        },
+        "walk": {
+            "width": 32,
+            "height": 32,
+            "images": [],
+            "time": [0.1]
+        }
+    }
+}

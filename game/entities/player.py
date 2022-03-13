@@ -1,45 +1,74 @@
 import json
+import pygame
 
-from engine import entity, filehandler, animation
-
-
-# if we want different types of characters in our game we can use this
-player_specs = {}
+from engine import animation, filehandler, entity, user_input
 
 
-class PlayerType:
-    def __init__(self, path, basepath="assets/"):
-        """Creates new playertype object - stores data on different characters"""
-        self.path = path
-        # load the data from the json
-        # format.txt in assets/playertypes/
-        self.animations = {}
-        with open(path, 'r') as file:
-            data = json.load(file)
-            file.close()
-        self.name = data["name"]
-        self.health = data["stats"]["health"]
-        self.speed = data["stats"]["speed"]
-        self.strength = data["stats"]["strength"]
-        # load animations
-        for ani in data["animation"]:
-            self.animations[ani] = animation.AnimationData(data["animation"][ani]["frames"], 
-                        data["animation"][ani]["size"], data["animation"][ani]["frame_time"], base_folder=basepath)
+PLAYER_ANIMATION_PATH = "assets/animations/player/"
+INFO_FILE = "info.json"
+
+# player width and stuff
+PLAYER_WIDTH = 0
+PLAYER_HEIGHT = 0
+
+# constants related to player
+PLAYER_IDLE = "idle"
+PLAYER_WALK = "walk"
+PLAYER_RUN = "run"
+PLAYER_ATTACK = "attack"
+
+MAX_HEALTH = 200
+WALK_SPEED = 50
+RUN_SPEED = 80
+WEIGHT = 100 # we use this to calculate friction :D
+
+
+player_animations = None
+
+
+def load_player_module():
+    """Loads player module"""
+    global player_animations
+    player_animations = {}
+    # load json file
+    with open(PLAYER_ANIMATION_PATH + INFO_FILE) as file:
+        data = json.load(file)
+        file.close()
+    # get data
+    player_size = data["player size"]
+    image_path = data["image path"]
+    for name, anidata in data["animations"].items():
+        w, h = anidata["width"], anidata["height"]
+        # create the animation block
+        data_block = animation.AnimationData(anidata["images"], (w,h), anidata["time"])
+        # now store it in the cache
+        player_animations[name] = animation.AnimationHandler(data_block)
 
 
 class Player(entity.Entity):
-    def __init__(self, x, y, w, h):
-        """Player object"""
+    def __init__(self, x, y):
+        """Player object constructor"""
         super().__init__()
+        # set parameters
+        entity.set_entity_properties(x, y, PLAYER_WIDTH, PLAYER_HEIGHT, None, self)
 
+        # set animation stuff
+        for ani in player_animations:
+            player_animations[ani].register_entity(self)
+        # set idle state
+        self.set_state(PLAYER_IDLE)
+        self.image = player_animations[self.state].get_frame(self.aid)
 
-def load_player_spec(path, base_folder="assets/"):
-    """Loads player specs from json file"""
-    PlayerType(path, base_folder)
-
-
-def create_player(player_type: str):
-    """Creates a new player from playertype string"""
-    return Player()
-
+        # gameplay
+        # TODO - make health bar object
+        self.health = 0
+    
+    def update(self, dt):
+        if user_input.is_key_pressed(pygame.K_d):
+            self.motion[0] += 100 * dt
+        if user_input.is_key_pressed(pygame.K_a):
+            self.motion[0] -= 100 * dt
+        
+        # yes
+        self.update_position()
 

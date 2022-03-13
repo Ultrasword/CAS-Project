@@ -14,15 +14,15 @@ background = (255, 255, 255)
 
 
 # ------------- TESTS ----------------------
-
-# load player types
-player.load_player_spec("assets/playertypes/basic.json", base_folder="assets/animations/")
-
+player.load_player_module()
+p = player.Player(100, 100)
 
 s = state.State()
 e = entity.Entity()
 entity.set_entity_properties(100, 100, 100, 100, "assets/unknown.png", e)
 s.handler.add_entity(e)
+s.handler.add_entity(p)
+
 
 c = chunk.Chunk(0, 0)
 for x in range(chunk.CHUNK_WIDTH):

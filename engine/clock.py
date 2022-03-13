@@ -30,3 +30,10 @@ def update():
     if wait_time > 0:
         delta_time += wait_time
         time.sleep(wait_time)
+
+# TODO - create a timer object
+class Timer:
+    def __init__(self):
+        pass
+
+

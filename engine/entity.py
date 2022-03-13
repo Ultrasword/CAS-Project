@@ -33,10 +33,10 @@ class Entity(object):
 
         # movement
         self.motion = [0, 0]
-        self.c_move = [0, 0]
 
         # animation related things
         self.aid = 0
+        self.state = None
 
     def update(self, dt):
         pass
@@ -44,6 +44,13 @@ class Entity(object):
     def render(self, window, offset):
         """Render entity"""
         window.blit(self.image, (self.pos[0] + offset[0], self.pos[1] + offset[1]))
+
+    def set_state(self, state):
+        self.state = state
+    
+    def update_position(self):
+        self.pos[0] += self.motion[0]
+        self.pos[1] += self.motion[1]
 
 
 def set_entity_properties(x, y, w, h, img, entity):
