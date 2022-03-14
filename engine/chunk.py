@@ -1,4 +1,4 @@
-from . import filehandler, maths, draw
+from . import filehandler, maths, draw, tile as engine_tile
 
 from collections import deque
 
@@ -30,7 +30,6 @@ DEBUG_COLOR = (255,0,0)
 class Chunk:
     def __init__(self, x:int, y:int, tilegrid:list = [], blocks:list = []):
         """Create chunk - stores blocks and the environment"""
-        self.textures = {}
         self.pos = [x * CHUNK_WIDTH_PIX, y * CHUNK_HEIGHT_PIX]
         self.area = [CHUNK_WIDTH_PIX, CHUNK_HEIGHT_PIX]
         
@@ -42,12 +41,15 @@ class Chunk:
         # grid - for placing blocks :D
         self.grid = [[0 for i in range(TILE_DATA_LENGTH)] for i in range(CHUNK_BLOCK_COUNT)]
         for d in tilegrid:
+            # get index
             index = d[1] * CHUNK_WIDTH + d[0]
-            # check if image was loaded
-            if not self.textures.get(data[TILE_I]):
-                self.textures[data[TILE_I]] = filehandler.scale(filehandler.get_image(data[TILE_I]), (TILE_WIDTH, TILE_WIDTH))
+            # check if the image directory is an actual image or an image name
+            if engine_tile.get_tile_key(d[TILE_I]):
+                # if it is an actual image, then turn it into an image name
+                d[TILE_I] = engine_tile.get_tile_key(d[TILE_I])
+            # set data into tilegrid index
             for i in range(TILE_DATA_LENGTH):
-                self.grid[index][i] = data[i]
+                self.grid[index][i] = d[i]
         # blocks
         self.blocks = []
     
@@ -55,7 +57,7 @@ class Chunk:
         """Renders the chunk tilegrid"""
         for tile in self.grid:
             if tile[TILE_I]:
-                window.blit(self.textures[tile[TILE_I]], (tile[TILE_X]*TILE_WIDTH + offset[0] + self.offset[0],
+                window.blit(engine_tile.get_tile(tile[TILE_I]).image, (tile[TILE_X]*TILE_WIDTH + offset[0] + self.offset[0],
                     tile[TILE_Y]*TILE_WIDTH + offset[1] + self.offset[1]))
 
     def render_blocks(self, window, offset):
@@ -79,8 +81,13 @@ class Chunk:
     def set_tile_at(self, tile):
         """set tile at a certian x y position - position is relative to the chunk"""
         index = tile[0] * CHUNK_WIDTH + tile[1]
-        if not self.textures.get(tile[TILE_I]):
-            self.textures[tile[TILE_I]] = filehandler.scale(filehandler.get_image(tile[TILE_I]), (TILE_WIDTH, TILE_WIDTH))
+        
+        # set tile and then get name
+        # if the tile image string is a directory path, convert to image name
+        if engine_tile.get_tile_key(tile[TILE_I]):
+            tile[TILE_I] = engine_tile.get_tile_key(tile[TILE_I])
+
+        # now set all the indices in the place correcto yay
         for i in range(TILE_DATA_LENGTH):
             self.grid[index][i] = tile[i]
     
@@ -159,7 +166,7 @@ def create_block(x, y, img, w, h, collidable=0):
 
 def create_tile(x, y, img, collidable=0):
     """Create a tile"""
-    return (x, y, img, collidable)
+    return [x, y, img, collidable]
 
 
 def collide_tile(entity, obj):

@@ -2,7 +2,7 @@ from . import filehandler
 
 
 class AnimationData:
-    def __init__(self, images, size, frame_time, base_folder="assets/"):
+    def __init__(self, images, size, frame_time, base_folder=""):
         """Constructor for animation data storing object"""
         self.frames = []
         self.f_count = len(images)-1

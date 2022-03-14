@@ -1,6 +1,7 @@
 import pygame
 
-from engine import window, clock, user_input, filehandler, handler, chunk, statehandler, state, entity
+import engine
+from engine import window, clock, user_input, filehandler, handler, chunk, statehandler, state, entity, tile
 from game.entities import player
 
 
@@ -9,6 +10,7 @@ from game.entities import player
 
 # create a window
 window.create_instance("CAS Project", 1280, 720, 0, 32, 0)
+tile.init_tiles("assets/tiles")
 
 background = (255, 255, 255)
 
@@ -34,14 +36,14 @@ c = chunk.Chunk(0, 0)
 s.handler.add_chunk(c)
 
 for y in range(chunk.CHUNK_HEIGHT):
-    c.set_tile_at(chunk.create_tile(5, y, "assets/grass.png", 1))
+    c.set_tile_at(chunk.create_tile(5, y, "grass", 1))
+    c.set_tile_at(chunk.create_tile(1, y, "code", 0))
 
 
 # must set chunk to active bc it has not been automated yet
 s.handler.active_chunks.append(c.id)
 
 statehandler.push_state(s)
-
 
 # ------------------------------------------
 

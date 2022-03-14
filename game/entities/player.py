@@ -39,7 +39,7 @@ def load_player_module():
     image_path = data["image path"]
     for name, anidata in data["animations"].items():
         # create the animation block
-        data_block = animation.AnimationData(anidata["images"], (player_size[0], player_size[1]), anidata["time"])
+        data_block = animation.AnimationData(anidata["images"], (player_size[0], player_size[1]), anidata["time"], image_path)
         # now store it in the cache
         player_animations[name] = animation.AnimationHandler(data_block)
 

@@ -30,6 +30,7 @@ class Entity(object):
         self.chunk = [0, 0]
         #              xoff,    yoff    width, height
         self.hitbox = [0,       0,      0,    0]
+        self.collided = [False, False, False, False]
 
         # image
         self.image = None
