@@ -1,7 +1,7 @@
 import json
 import pygame
 
-from engine import animation, filehandler, entity, user_input
+from engine import animation, filehandler, entity, user_input, maths
 
 
 PLAYER_ANIMATION_PATH = "assets/animations/player/"
@@ -50,6 +50,10 @@ class Player(entity.Entity):
         super().__init__()
         # set parameters
         entity.set_entity_properties(x, y, PLAYER_WIDTH, PLAYER_HEIGHT, None, self)
+        self.hitbox[0] = 16
+        self.hitbox[1] = 16
+        self.hitbox[2] = 54
+        self.hitbox[3] = 54
 
         # set animation stuff
         for ani in player_animations:
@@ -77,6 +81,8 @@ class Player(entity.Entity):
         if user_input.is_key_pressed(pygame.K_w):
             self.motion[1] -= WALK_SPEED * dt
         
+        self.motion[0] = maths.lerp(self.motion[0], 0, 0.3)
+        self.motion[1] = maths.lerp(self.motion[1], 0, 0.3)
         # yes
-        self.update_position()
+        self.moved = True
 
