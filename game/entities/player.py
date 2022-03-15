@@ -52,8 +52,8 @@ class Player(entity.Entity):
         entity.set_entity_properties(x, y, PLAYER_WIDTH, PLAYER_HEIGHT, None, self)
         self.hitbox[0] = 16
         self.hitbox[1] = 16
-        self.hitbox[2] = 54
-        self.hitbox[3] = 54
+        self.hitbox[2] = 32
+        self.hitbox[3] = 32
 
         # set animation stuff
         for ani in player_animations:
