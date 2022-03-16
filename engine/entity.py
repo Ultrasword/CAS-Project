@@ -16,7 +16,7 @@ class object:
         self.id = create_object_id()
 
 
-DEBUG_COLOR = (255, 0, 0)
+DEBUG_COLOR = (0, 0, 0)
 
 
 class Entity(object):
@@ -80,4 +80,7 @@ def set_entity_properties(x, y, w, h, img, entity):
     if h:
         entity.area[1] = h
     if img:
-        entity.image = filehandler.get_image(img)
+        if entity.area[0] and entity.area[1]:
+            entity.image = filehandler.scale(filehandler.get_image(img), entity.area)
+        else:
+            entity.image = filehandler.get_image(img)

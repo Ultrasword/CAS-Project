@@ -29,10 +29,22 @@ def create_instance(t, w, h, f=0, b=32, v=1, framebuffer=False):
         INITIALIZED = True
         INSTANCE = pygame.display.set_mode((w, h), flags=f, depth=b, vsync=v)
         FRAMEBUFFER = pygame.Surface((w, h)).convert()
+        pygame.display.set_caption(t)
     else:
         INSTANCE = pygame.display.set_mode((w, h), flags=f, depth=b, vsync=v)
+        pygame.display.set_caption(t)
     WIDTH, HEIGHT, FLAGS, DEPTH, VSYNC = w, h, f, b, v
     return INSTANCE
+
+
+def set_title(title):
+    """Set window title"""
+    pygame.display.set_caption(title)
+
+
+def set_icon(icon):
+    """Set window icon"""
+    pygame.display.set_icon(icon)
 
 
 def get_instance():

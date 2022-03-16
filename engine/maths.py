@@ -9,10 +9,12 @@ def mod(num, div):
 
 
 def lerp(a, b, c):
+    """Linear interpolation"""
     return (b - a) * c + a
 
 
 def clamp(num, _min, _max):
+    """Insert value, and make sure it stays between _min and _max"""
     if num < _min:
         return _min
     if num > _max:
@@ -39,10 +41,12 @@ def collide_rect(r1, r2):
 
 
 def two_hash(left, right):
+    """Hash 2 numbers"""
     return (left << 16) + right
 
 
 def two_unhash(num):
+    """Unhash a number into 2 numbers"""
     left = (num >> 16) + 1
     right = num - (left << 16)
     return left, right

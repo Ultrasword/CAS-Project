@@ -50,10 +50,10 @@ class Player(entity.Entity):
         super().__init__()
         # set parameters
         entity.set_entity_properties(x, y, PLAYER_WIDTH, PLAYER_HEIGHT, None, self)
-        self.hitbox[0] = 16
-        self.hitbox[1] = 16
-        self.hitbox[2] = 32
-        self.hitbox[3] = 32
+        self.hitbox[0] = 0
+        self.hitbox[1] = 0
+        self.hitbox[2] = 64
+        self.hitbox[3] = 64
 
         # set animation stuff
         for ani in player_animations:
