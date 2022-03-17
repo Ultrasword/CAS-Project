@@ -2,7 +2,7 @@ from . import maths, chunk
 from collections import deque
 
 
-GRAVITY = 100
+GRAVITY = 120
 
 
 class Handler:

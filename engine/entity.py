@@ -36,6 +36,7 @@ class Entity(object):
         self.image = None
         self.image_offset = [0, 0]
         self.xflip = False
+        self.flip_change = False
 
         # movement
         self.motion = [0, 0]
@@ -65,7 +66,6 @@ class Entity(object):
         self.pos[1] += self.motion[1]
         self.chunk[0] = maths.mod(self.pos[0], chunk.CHUNK_WIDTH)
         self.chunk[1] = maths.mod(self.pos[1], chunk.CHUNK_HEIGHT)
-    
 
 
 def set_entity_properties(x, y, w, h, img, entity):

@@ -1,11 +1,11 @@
 {
     "player size": [64, 64],
-    "image path": "assets/textures/",
+    "image path": "assets/animations/player/",
     "animations": {
         "idle": {
-            "width": 32,
-            "height": 32,
-            "images": ["unknown.png", "grass.png"],
+            "width": 128,
+            "height": 128,
+            "images": ["idle/idle1.png", "idle/idle1.png"],
             "time": [0.1, 0.2]
         },
         "walk": {
