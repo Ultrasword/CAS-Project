@@ -40,6 +40,7 @@ class Entity(object):
         # movement
         self.motion = [0, 0]
         self.moved = False
+        self.gravity = False
 
         # animation related things
         self.aid = 0

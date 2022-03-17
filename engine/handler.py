@@ -2,6 +2,9 @@ from . import maths, chunk
 from collections import deque
 
 
+GRAVITY = 100
+
+
 class Handler:
     def __init__(self):
         """Handler constructor"""
@@ -27,6 +30,8 @@ class Handler:
         for entity in self.entities.values():
             entity.update(dt)
             if entity.moved:
+                if entity.gravity:
+                    entity.motion[1] += GRAVITY * dt
                 self.move_entity(entity)
             entity.render(window, offset)
             # debug

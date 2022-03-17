@@ -18,8 +18,8 @@ PLAYER_RUN = "run"
 PLAYER_ATTACK = "attack"
 
 MAX_HEALTH = 200
-WALK_SPEED = 50
-RUN_SPEED = 80
+WALK_SPEED = 120
+RUN_SPEED = 140
 WEIGHT = 100 # we use this to calculate friction :D
 
 
@@ -65,6 +65,7 @@ class Player(entity.Entity):
         # gameplay
         # TODO - make health bar object
         self.health = 0
+        self.gravity = True
     
     def update(self, dt):
         # update animation

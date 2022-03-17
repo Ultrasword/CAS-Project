@@ -151,7 +151,7 @@ class Chunk:
                     # check y now cuz why not
                     if valy > 0:
                         # moving down
-                        entity.pos[1] = tile[TILE_Y] * TILE_WIDTH - entity.hitbox[3] - entity.hitbox[1]
+                        entity.pos[1] = tile[TILE_Y] * TILE_WIDTH - entity.hitbox[3] - entity.hitbox[1] - 1
                         entity.motion[1] = 0
                     elif valy < 0:
                         # moving up

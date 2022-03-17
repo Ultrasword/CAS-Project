@@ -4,6 +4,8 @@ import engine
 from engine import window, clock, user_input, filehandler, handler, chunk, statehandler, state, entity, tile
 from game.entities import player
 
+from game import load_map
+
 
 # for import tests
 # exit()
@@ -17,7 +19,7 @@ background = (255, 255, 255)
 
 # ------------- TESTS ----------------------
 player.load_player_module()
-p = player.Player(600, 100)
+p = player.Player(100, 100)
 
 s = state.State()
 # e = entity.Entity()
@@ -28,17 +30,15 @@ s.handler.add_entity(p)
 # s.handler.add_entity(player.Player(200, 200))
 
 
-c = chunk.Chunk(0, 0)
+# c = chunk.Chunk(0, 0)
 # for x in range(chunk.CHUNK_WIDTH):
 #     for y in range(chunk.CHUNK_HEIGHT):
 #         t = chunk.create_tile(x, y, "assets/grass.png")
 #         c.set_tile_at(t)
+# s.handler.add_chunk(c)
+c = load_map.create_tile_map("assets/levels/1.json")
+
 s.handler.add_chunk(c)
-
-for y in range(chunk.CHUNK_HEIGHT):
-    c.set_tile_at(chunk.create_tile(5, y, "grass", 1))
-    c.set_tile_at(chunk.create_tile(1, y, "code", 0))
-
 
 # must set chunk to active bc it has not been automated yet
 s.handler.active_chunks.append(c.id)
