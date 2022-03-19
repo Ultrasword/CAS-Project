@@ -56,7 +56,7 @@ class Entity(object):
 
     def debug_render(self, window, offset):
         draw.DEBUG_DRAW_LINE(window, DEBUG_COLOR, (self.hitbox[0] + self.pos[0], self.hitbox[1] + self.pos[1]),
-                                 (self.pos[0] + self.hitbox[0] + self.hitbox[2], self.pos[1] + self.hitbox[1] + self.hitbox[3]))
+                                (self.pos[0] + self.hitbox[0] + self.hitbox[2], self.pos[1] + self.hitbox[1] + self.hitbox[3]))
 
     def set_state(self, state):
         self.state = state
