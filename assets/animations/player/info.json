@@ -5,8 +5,8 @@
         "idle": {
             "width": 128,
             "height": 128,
-            "images": ["idle/idle1.png", "idle/idle1.png"],
-            "time": [0.1, 0.2]
+            "images": ["idle/grass.png", "idle/idle1.png"],
+            "time": [0.1, 0.1]
         },
         "walk": {
             "width": 32,
