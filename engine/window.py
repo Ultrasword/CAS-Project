@@ -12,7 +12,9 @@ WIDTH, HEIGHT = 0, 0
 FLAGS = 0
 DEPTH = 0
 VSYNC = 0
+SCALING = False
 
+INSTANCE_CHANGED = True
 GLOBAL_CLOCK = None
 
 # framebuffer scale and stuff
@@ -28,7 +30,8 @@ def create_instance(t, w, h, f=0, b=32, v=1, framebuffer=False):
         pygame.init()
         INITIALIZED = True
         INSTANCE = pygame.display.set_mode((w, h), flags=f, depth=b, vsync=v)
-        FRAMEBUFFER = pygame.Surface((w, h)).convert()
+        if framebuffer:
+            FRAMEBUFFER = pygame.Surface((w, h)).convert()
         pygame.display.set_caption(t)
     else:
         INSTANCE = pygame.display.set_mode((w, h), flags=f, depth=b, vsync=v)
@@ -52,8 +55,41 @@ def get_instance():
     return INSTANCE
 
 
+def get_instance_for_draw():
+    """Return the instance and set chagned to True"""
+    global INSTANCE_CHANGED
+    INSTANCE_CHANGED = True
+    return INSTANCE
+
+
+def set_scaling(scale):
+    """set whether or not the window should scale framebuffer"""
+    global SCALING
+    SCALING = scale
+
+
+def fill_instance(color):
+    """Fill instance with solid color"""
+    global INSTANCE_CHANGED
+    INSTANCE_CHANGED = True
+    INSTANCE.fill(color)
+
+
+def change_framebuffer(w:int, h:int, f:int):
+    """change a framebuffer"""
+    global FRAMEBUFFER
+    FRAMEBUFFER = pygame.Surface((w, h), flags=f).convert()
+
+
 def get_framebuffer():
     """returns the framebuffer"""
+    return FRAMEBUFFER
+
+
+def get_framebuffer_for_draw():
+    """Return framebuffer and set changed to True"""
+    global INSTANCE_CHANGED
+    INSTANCE_CHANGED = True
     return FRAMEBUFFER
 
 
@@ -69,3 +105,29 @@ def create_clock(FPS):
     global GLOBAL_CLOCK
     GLOBAL_CLOCK = pygame.time.Clock()
 
+
+def fill_buffer(color):
+    """fill instance framebuffer"""
+    global INSTANCE
+    FRAMEBUFFER.fill(color)
+
+
+def push_buffer(offset):
+    """push the framebuffer onto the window"""
+    global INSTANCE_CHANGED, SCALING, WIDTH, HEIGHT
+    INSTANCE.blit(FRAMEBUFFER if not SCALING else pygame.transform.scale(FRAMEBUFFER, (WIDTH, HEIGHT)), offset)
+    INSTANCE_CHANGED = False
+
+
+def draw_buffer(surface, pos):
+    """draw onto framebuffer"""
+    global INSTANCE_CHANGED
+    FRAMEBUFFER.blit(surface, pos)
+    INSTANCE_CHANGED = True
+
+
+def draw(surface, pos):
+    """draw directly onto instance"""
+    global INSTANCE_CHANGED
+    INSTANCE_CHANGED = True
+    INSTANCE.blit(surface, pos)

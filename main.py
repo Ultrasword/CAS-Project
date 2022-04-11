@@ -1,69 +1,83 @@
 import pygame
 
 import engine
-from engine import window, clock, user_input, filehandler, handler, chunk, statehandler, state, entity, tile
-from game.entities import player
-
-from game import load_map
+from engine import window, clock, user_input, handler, draw, filehandler, maths
 
 
-# for import tests
-# exit()
-
-# create a window
-window.create_instance("CAS Project", 1280, 720, 0, 32, 0)
-tile.init_tiles("assets/tiles")
 
 background = (255, 255, 255)
 
-
-# ------------- TESTS ----------------------
-player.load_player_module()
-p = player.Player(100, 100)
-
-s = state.State()
-# e = entity.Entity()
-# entity.set_entity_properties(100, 100, 100, 100, "assets/unknown.png", e)
-# s.handler.add_entity(e)
-s.handler.add_entity(p)
-
-# s.handler.add_entity(player.Player(200, 200))
+# create essential instances
+window.create_instance("Template", 1280, 720, f=pygame.RESIZABLE)
+window.set_scaling(True)
+window.change_framebuffer(1280, 720, pygame.SRCALPHA)
 
 
-# c = chunk.Chunk(0, 0)
-# for x in range(chunk.CHUNK_WIDTH):
-#     for y in range(chunk.CHUNK_HEIGHT):
-#         t = chunk.create_tile(x, y, "assets/grass.png")
-#         c.set_tile_at(t)
-# s.handler.add_chunk(c)
-c = load_map.create_tile_map("assets/levels/1.json")
 
-s.handler.add_chunk(c)
+# handler object -> # TODO - abstract later 
+HANDLER = handler.Handler()
 
-# must set chunk to active bc it has not been automated yet
-s.handler.active_chunks.append(c.id)
 
-statehandler.push_state(s)
 
-# ------------------------------------------
+# -------- testing ------ #
+
+img = filehandler.get_image("test/images/test1.png")
+
+object_data = handler.ObjectData(100, 100, 100, 100)
+
+class test(handler.Object):
+    def __init__(self):
+        super().__init__()
+        # set params
+        object_data.set_object_params(self)
+        # image
+        self.image = filehandler.scale(img, self.area)
+    
+    def update(self, dt):
+        # print(dt)
+        if user_input.is_key_pressed(pygame.K_a):
+            self.motion[0] -= 100 * dt
+        if user_input.is_key_pressed(pygame.K_d):
+            self.motion[0] += 100 * dt
+        if user_input.is_key_pressed(pygame.K_w):
+            self.motion[1] -= 100 * dt
+        if user_input.is_key_pressed(pygame.K_s):
+            self.motion[1] += 100 * dt
+        
+        # lerp
+        self.motion[0] = maths.lerp(self.motion[0], 0.0, 0.3)
+        self.motion[1] = maths.lerp(self.motion[1], 0.0, 0.3)
+
+        self.pos[0] += self.motion[0]
+        self.pos[1] += self.motion[1]
+
+    def render(self):
+        window.draw_buffer(self.image, self.pos)
+        # draw some lines facing the direction of the motion
+        c = self.center
+        draw.DEBUG_DRAW_LINE(window.get_framebuffer(), (255,0,0), c, (c[0] + self.motion[0] * 10, c[1] + self.motion[1] * 10), 1)
+
+HANDLER.add_entity_auto(test())
+
+# ----------------------- #
 
 
 clock.start(fps=30)
 window.create_clock(clock.FPS)
 running = True
 while running:
+    # fill instance
+    window.fill_buffer(background)
+
     # updates
-    window.FRAMEBUFFER.fill(background)
-    
-    # render world and update stuff
-    statehandler.CURRENT.handler.render_chunks(window.FRAMEBUFFER, (0,0))       # TODO - add camera thing
-    statehandler.CURRENT.handler.update_and_render_entities(window.FRAMEBUFFER, clock.delta_time, (0,0)) # TODO - same here
+    HANDLER.handle_entities(clock.delta_time)
 
     # render
-    # window.INSTANCE.blit(pygame.transform.scale(window.FRAMEBUFFER, (window.WIDTH, window.HEIGHT)), (0,0))
-    window.INSTANCE.blit(window.FRAMEBUFFER, (0,0))
+    window.push_buffer((0,0))
     pygame.display.flip()
 
+    # update keyboard and mouse
+    user_input.update()
     # for loop through events
     for e in pygame.event.get():
         # handle different events
@@ -88,13 +102,19 @@ while running:
             # window resized
             window.handle_resize(e)
             user_input.update_ratio(window.WIDTH, window.HEIGHT, window.ORIGINAL_WIDTH, window.ORIGINAL_HEIGHT)
-    # update keyboard
-    user_input.update()
+        elif e.type == pygame.WINDOWMAXIMIZED:
+            # window maximized
+            window.get_instance().fill(background)
+            # re render all entities
+            HANDLER.render_all()
+            # push frame
+            pygame.display.update()
+            # prevent re push
+            window.INSTANCE_CHANGED = False
 
-    # print(user_input.get_mouse_pos())
-
-    # update clock
+    # update clock -- calculate delta time
     clock.update()
+    # update global clock - time sleep for vsync
     window.GLOBAL_CLOCK.tick(clock.FPS)
 
 pygame.quit()

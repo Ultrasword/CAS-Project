@@ -1,4 +1,0 @@
-When editing files, make sure that game related files are located in the game folder
-These include player scripts, entity scripts, blah, world generation, etc
-
-The assets folder holds the player sprites, the world textures, and also levels and other stuff like that

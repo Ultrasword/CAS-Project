@@ -36,3 +36,9 @@ def xflip(img):
 def yflip(img):
     """flips image across x axis"""
     return pygame.transform.flip(img, False, True)
+
+
+def make_surface(width, height, flags=0):
+    """Make a surface object and return it"""
+    return pygame.Surface((width, height), flags).convert()
+

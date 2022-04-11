@@ -1,0 +1,22 @@
+Metadata-Version: 1.1
+Name: tmx
+Version: 1.10
+Summary: Simple TMX library.
+Home-page: http://python-tmx.nongnu.org
+Author: Julie Marchant
+Author-email: onpon4@riseup.net
+License: Apache License 2.0
+Description: This library reads and writes the Tiled TMX format in a simple way.
+        This is useful for map editors or generic level editors, and it's also
+        useful for using a map editor or generic level editor like Tiled to edit
+        your game's levels.
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: License :: DFSG approved
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Games/Entertainment
+Classifier: Topic :: Software Development
+Requires: six (>=1.4.0)

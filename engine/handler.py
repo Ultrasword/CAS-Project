@@ -1,79 +1,214 @@
-from . import maths, chunk
-from collections import deque
+"""
+File for object types in the engine
+"""
+
+# ---------------- dataclass --------------- #
+
+from dataclasses import dataclass
+
+@dataclass
+class ObjectData:
+    """
+    Used to hold data for setting object data
+    """
+
+    x: int
+    y: int
+    w: int
+    h: int
+
+    def set_object_params(self, obj) -> None:
+        """Set property of objects below"""
+        obj.pos[0] = self.x
+        obj.pos[1] = self.y
+        obj.area[0] = self.w
+        obj.area[1] = self.h
 
 
-GRAVITY = 120
+# --------------- objects ---------------- #
 
+ID_COUNTER = 0
+
+def get_object_id():
+    """get an object id"""
+    global ID_COUNTER
+    ID_COUNTER += 1
+    return ID_COUNTER
+
+
+class Object:
+    """
+    Defeault object class
+    Has similar purpose to Persistent Object but acts as a non-persistent object class
+    """
+
+    def __init__(self):
+        """Constructor for Object class"""
+        # object identification
+        self.object_id = 0
+
+        # standard variables
+        self.pos = [0.0, 0.0]
+        self.area = [0.0, 0.0]
+
+        # physics properties
+        self.friction = [0.0, 0.0]
+        self.motion = [0.0, 0.0]
+
+    @property
+    def id(self):
+        """Get the object id"""
+        return self.object_id
+    
+    def update(self, dt):
+        """Default update method"""
+        pass
+    
+    def handle_changes(self):
+        """Default handle changes method"""
+        pass
+    
+    def render(self):
+        """Default render function"""
+        pass
+
+    @property
+    def center(self):
+        """Get's center of the object"""
+        return (self.pos[0] + self.area[0] // 2, self.pos[1] + self.area[1] // 2)
+    
+    @property
+    def left(self):
+        """Get's left of object"""
+        return self.pos[0]
+    
+    @property
+    def right(self):
+        """Get's right of object"""
+        return self.pos[0] + self.area[0]
+    
+    @property
+    def top(self):
+        """Get's top of object"""
+        return self.pos[1]
+    
+    @property
+    def bottom(self):
+        """Get's bottom of object"""
+        return self.pos[1] + self.area[1]
+
+
+class PersistentObject(Object):
+    """
+    Objects are things that will be used to render in game entities
+    they should not be used to create non-rendered objects
+
+    Objects include:
+    - entities
+    - persistent effects
+
+    Not include:
+    - particles
+    - background effects
+    
+    """
+    def __init__(self):
+        """ Constructor for Persistent Object class"""
+        super().__init__()
+
+
+# ------------------ handler ------------------ #
 
 class Handler:
+    """
+    A persistent object and non persistent object handler
+    When adding an object, you can either pick an specific type to add
+    Or you can just use a default func defined
+
+    Can add
+    - entities
+    - background effects
+    - persistent background effects
+
+    Should not add
+    - Particles
+    - should use ParticleHandler
+    
+    """
     def __init__(self):
         """Handler constructor"""
-        # entities
-        self.entities = {}
-        self.active_entites = deque()
+        # for persistent objects
+        self.p_objects = {}
 
-        # world
-        self.world = {}
-        self.active_chunks = deque()
-    
-    def add_entity(self, entity):
-        """Add entity to the world"""
-        self.entities[entity.id] = entity
-    
-    def add_chunk(self, chunk):
-        """Add chunk to the world"""
-        # the chunk id is a hash of the position
-        self.world[chunk.id] = chunk
-    
-    def update_and_render_entities(self, window, dt, offset):
-        """Update and render entities"""
-        for entity in self.entities.values():
-            entity.update(dt)
-            if entity.moved:
-                if entity.gravity:
-                    entity.motion[1] += GRAVITY * dt
-                self.move_entity(entity)
-            entity.render(window, offset)
-            # debug
-            entity.debug_render(window, offset)
-    
-    def render_chunks(self, window, offset):
-        """Render all active chunks"""
-        for a in self.active_chunks:
-            self.world[a].render_grid(window, offset)
-            self.world[a].render_blocks(window, offset)
-            # debug
-            self.world[a].debug_render(window, offset)
-    
-    def move_entity(self, entity):
-        """Move an entity and perform collision detection"""
-        # calculate entity chunk
-        entity.chunk[0] = int(entity.pos[0] // chunk.CHUNK_WIDTH_PIX)
-        entity.chunk[1] = int(entity.pos[1] // chunk.CHUNK_HEIGHT_PIX)
+        # non persistent objects
+        self.objects = {}
+        self.non_p_object_counter = 0
 
-        # TODO - redo the movement system
-        entity.pos[0] += entity.motion[0]
-        for x in range(entity.chunk[0] - 1, entity.chunk[0] + 2):
-            for y in range(entity.chunk[1] - 1, entity.chunk[1] + 2):
-                # chekc if if chunk exists
-                c = self.world.get(maths.two_hash(x, y))
-                if not c:
-                    continue
-                if not c.entity_overlap(entity):
-                    continue
-                c.collide_and_move_x(entity, c.get_colliding_tiles(entity))
+        # updates
+        self.dirty = True
+    
+    def get_non_persist_id(self):
+        """Generate a non persisting id for this specific handler"""
+        self.non_p_object_counter += 1
+        return self.non_p_object_counter
+    
+    def add_persist_entity(self, entity):
+        """Add persistent entity"""
+        entity.object_id = get_object_id()
+        self.p_objects[entity.id] = entity
+    
+    def add_non_persist_entity(self, entity):
+        """Add non-persisting entity"""
+        entity.object_id = self.get_non_persist_id()
+        self.objects[entity.id] = entity
+    
+    def add_entity_auto(self, entity):
+        """Add entity and auto select where it should go"""
+        if isinstance(entity, PersistentObject):
+            self.add_persist_entity(entity)
+        else:
+            self.add_non_persist_entity(entity)
+
+    def remove_persistent_entity(self, eid):
+        """Can only remove persistent entities"""
+        if eid in self.p_objects:
+            self.p_objects.pop(eid)
+    
+    def remove_entity(self, eid):
+        """Can only remove non-persisting entities"""
+        if eid in self.objects:
+            self.objects.pop(eid)
         
-        entity.pos[1] += entity.motion[1]
-        for x in range(entity.chunk[0] - 1, entity.chunk[0] + 2):
-            for y in range(entity.chunk[1] - 1, entity.chunk[1] + 2):
-                # chekc if if chunk exists
-                c = self.world.get(maths.two_hash(x, y))
-                if not c:
-                    continue
-                # print(int(c.entity_overlap(entity)), c.pos, c.area, entity.pos, entity.area, entity.hitbox)
-                if not c.entity_overlap(entity):
-                    continue
-                c.collide_and_move_y(entity, c.get_colliding_tiles(entity))
+    def handle_entities(self, dt):
+        """
+        Handle entities
+        
+        1. Update entities
+            - pass through dt
+        2. Render entities
+            - pass through window
+        """
+        for eid, entity in self.p_objects.items():
+            entity.update(dt)
+            entity.handle_changes()
+            entity.render()
+        
+        for eid, entity in self.objects.items():
+            entity.update(dt)
+            entity.handle_changes()
+            entity.render()
 
-        entity.moved = False
+    def render_all(self):
+        """Render all entities in case needed to"""
+        # usually used when window resized
+        for eid, entity in self.p_objects.items():
+            entity.dirty = True
+            entity.render()
+        
+        for eid, entity in self.objects.items():
+            entity.dirty = True
+            entity.render()
+
+
+
 
