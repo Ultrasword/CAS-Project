@@ -18,7 +18,6 @@ window.change_framebuffer(1280, 720, pygame.SRCALPHA)
 HANDLER = handler.Handler()
 
 
-
 # -------- testing ------ #
 
 img = filehandler.get_image("test/images/test1.png")
