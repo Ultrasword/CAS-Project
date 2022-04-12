@@ -1,8 +1,7 @@
 import pygame
 
 import engine
-from engine import window, clock, user_input, handler, draw, filehandler, maths
-
+from engine import window, clock, user_input, handler, draw, filehandler, maths, animation
 
 
 background = (255, 255, 255)
@@ -20,8 +19,10 @@ HANDLER = handler.Handler()
 
 # -------- testing ------ #
 
-img = filehandler.get_image("test/images/test1.png")
+data = animation.create_animation_handler_from_json("assets/animations/tomato/tomato.json")
 
+
+img = filehandler.get_image("test/images/test1.png")
 object_data = handler.ObjectData(100, 100, 100, 100)
 
 class test(handler.Object):
@@ -30,31 +31,40 @@ class test(handler.Object):
         # set params
         object_data.set_object_params(self)
         # image
-        self.image = filehandler.scale(img, self.area)
-    
+        # self.image = filehandler.scale(img, self.area)
+        # animation test
+        self.ani = data.get_registry()
+        self.image = self.ani.get_frame()
+        # set new area
+        self.area = self.ani.frame_dim
+
     def update(self, dt):
+        self.ani.update(dt)
+        if self.ani.changed:
+            self.image = self.ani.get_frame()
+
         # print(dt)
         if user_input.is_key_pressed(pygame.K_a):
-            self.motion[0] -= 100 * dt
+            self.m_motion[0] -= 100 * dt
         if user_input.is_key_pressed(pygame.K_d):
-            self.motion[0] += 100 * dt
+            self.m_motion[0] += 100 * dt
         if user_input.is_key_pressed(pygame.K_w):
-            self.motion[1] -= 100 * dt
+            self.m_motion[1] -= 100 * dt
         if user_input.is_key_pressed(pygame.K_s):
-            self.motion[1] += 100 * dt
+            self.m_motion[1] += 100 * dt
         
         # lerp
-        self.motion[0] = maths.lerp(self.motion[0], 0.0, 0.3)
-        self.motion[1] = maths.lerp(self.motion[1], 0.0, 0.3)
+        self.m_motion[0] = maths.lerp(self.m_motion[0], 0.0, 0.3)
+        self.m_motion[1] = maths.lerp(self.m_motion[1], 0.0, 0.3)
 
-        self.pos[0] += self.motion[0]
-        self.pos[1] += self.motion[1]
+        self.m_pos[0] += self.m_motion[0]
+        self.m_pos[1] += self.m_motion[1]
 
     def render(self):
         window.draw_buffer(self.image, self.pos)
         # draw some lines facing the direction of the motion
         c = self.center
-        draw.DEBUG_DRAW_LINE(window.get_framebuffer(), (255,0,0), c, (c[0] + self.motion[0] * 10, c[1] + self.motion[1] * 10), 1)
+        draw.DEBUG_DRAW_LINE(window.get_framebuffer(), (255,0,0), c, (c[0] + self.m_motion[0] * 10, c[1] + self.m_motion[1] * 10), 1)
 
 HANDLER.add_entity_auto(test())
 

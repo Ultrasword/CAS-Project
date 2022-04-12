@@ -1,0 +1,21 @@
+{
+    "name": "tomato",
+    "base_path": "assets/animations/tomato",
+    "ext": ".png",
+    "images": [
+        "tomato1",
+        "tomato2",
+        "tomato3",
+        "tomato4",
+        "tomato5",
+        "tomato6",
+        "tomato7",
+        "tomato8",
+        "tomato9",
+        "tomato10",
+        "tomato11",
+        "tomato12"
+    ],
+    "size": [64, 64],
+    "fps": 8
+}

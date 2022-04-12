@@ -48,12 +48,12 @@ class Object:
         self.object_id = 0
 
         # standard variables
-        self.pos = [0.0, 0.0]
-        self.area = [0.0, 0.0]
+        self.m_pos = [0.0, 0.0]
+        self.m_area = [0.0, 0.0]
 
         # physics properties
-        self.friction = [0.0, 0.0]
-        self.motion = [0.0, 0.0]
+        self.m_friction = [0.0, 0.0]
+        self.m_motion = [0.0, 0.0]
 
     @property
     def id(self):
@@ -75,27 +75,69 @@ class Object:
     @property
     def center(self):
         """Get's center of the object"""
-        return (self.pos[0] + self.area[0] // 2, self.pos[1] + self.area[1] // 2)
+        return (self.m_pos[0] + self.m_area[0] // 2, self.m_pos[1] + self.m_area[1] // 2)
     
     @property
     def left(self):
         """Get's left of object"""
-        return self.pos[0]
+        return self.m_pos[0]
     
     @property
     def right(self):
         """Get's right of object"""
-        return self.pos[0] + self.area[0]
+        return self.m_pos[0] + self.m_area[0]
     
     @property
     def top(self):
         """Get's top of object"""
-        return self.pos[1]
+        return self.m_pos[1]
     
     @property
     def bottom(self):
         """Get's bottom of object"""
-        return self.pos[1] + self.area[1]
+        return self.m_pos[1] + self.m_area[1]
+
+    @property
+    def width(self):
+        """Get the width parameter"""
+        return self.m_area[0]
+    
+    @width.setter
+    def width(self, other):
+        """Set the width"""
+        self.m_area[0] = other
+
+    @property
+    def height(self):
+        """Get the height parameter"""
+        return self.m_area[1]
+
+    @height.setter
+    def height(self, other):
+        """Set the height parameter"""
+        self.m_area[1] = other
+
+    @property
+    def area(self):
+        """Area getter"""
+        return self.m_area
+
+    @area.setter
+    def area(self, a):
+        """Area setter"""
+        self.m_area[0] = a[0]
+        self.m_area[1] = a[1]
+
+    @property
+    def pos(self):
+        """Get the object position"""
+        return self.m_pos
+
+    @pos.setter
+    def pos(self, a):
+        """Set the position"""
+        self.m_pos[0] = a[0]
+        self.m_pos[1] = a[1]
 
 
 class PersistentObject(Object):
