@@ -1,7 +1,9 @@
 import pygame
 
 import engine
-from engine import window, clock, user_input, handler, draw, filehandler, maths, animation, state, world
+from engine import window, clock, user_input, handler, draw
+from engine import filehandler, maths, animation, state
+from engine.globals import *
 
 
 background = (255, 255, 255)
@@ -10,7 +12,6 @@ background = (255, 255, 255)
 window.create_instance("Template", 1280, 720, f=pygame.RESIZABLE)
 window.set_scaling(True)
 window.change_framebuffer(1280, 720, pygame.SRCALPHA)
-
 
 
 # handler object -> # TODO - abstract later 
@@ -24,9 +25,13 @@ data = animation.create_animation_handler_from_json("assets/animations/tomato/to
 
 tile = "assets/terrain/dirt.png"
 c = HANDLER.make_template_chunk(0, 0)
-for x in range(world.CHUNK_WIDTH):
-    for y in range(world.CHUNK_HEIGHT):
-        c.set_tile_at(c.create_grid_tile(x, y, tile))
+# for x in range(world.CHUNK_WIDTH):
+#     for y in range(world.CHUNK_HEIGHT):
+#         c.set_tile_at(c.create_grid_tile(x, y, tile))
+for x in range(CHUNK_WIDTH):
+    c.set_tile_at(c.create_grid_tile(x, 7, tile, collide=True))
+for x in range(CHUNK_WIDTH):
+    c.set_tile_at(c.create_grid_tile(x, 6, tile, collide=False))
 
 
 img = filehandler.get_image("test/images/test1.png")
