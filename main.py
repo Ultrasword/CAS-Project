@@ -81,8 +81,8 @@ class test(handler.Object):
 
 HANDLER.add_entity_auto(test())
 
-# ----------------------- #
 
+# ------------ Game Loop ----------- #
 
 clock.start(fps=30)
 window.create_clock(clock.FPS)

@@ -28,6 +28,15 @@ class Serializable:
     def serialize(self) -> dict:
         """Serialize the object"""
         return {}
+    
+    @staticmethod
+    def save_to_file(file_path: str, data: dict) -> None:
+        """Saves data to a .json file"""
+        if not file_path.endswith(".json"):
+            file_path += ".json"
+        with open(file_path, "w") as file:
+            json.dump(data, file)
+            file.close()
 
 # ------- Serialize chunks ------------- #
 
@@ -49,11 +58,15 @@ class SerializeChunk(Serializable):
         result[CHUNK_POS_KEY] = chunk.pos
         result[CHUNK_IMAGES_KEY] = {id: val for id, val in enumerate(chunk.images.keys())}
         return result
+
+
+# ------- Serialize World -------------- #
+
+class SerializeWorld(Serializable):
+    def __init__(self):
+        """Serialize World Constructor"""
+        super().__init__()
     
-    def save_to_file(self, file_path: str, data: dict) -> None:
-        """Saves data to a .json file"""
-        if not file_path.endswith(".json"):
-            file_path += ".json"
-        with open(file_path, "w") as file:
-            json.dump(data, file)
-            file.close()
+    def serialize(self) -> dict:
+        pass
+ 
