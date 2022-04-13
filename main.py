@@ -43,7 +43,7 @@ class test(handler.Object):
         self.ani = data.get_registry()
         self.image = self.ani.get_frame()
         # set new area
-        self.area = self.ani.frame_dim
+        self.rect.area = self.ani.frame_dim
 
     def update(self, dt):
         self.ani.update(dt)
@@ -63,15 +63,13 @@ class test(handler.Object):
         # lerp
         self.m_motion[0] = maths.lerp(self.m_motion[0], 0.0, 0.3)
         self.m_motion[1] = maths.lerp(self.m_motion[1], 0.0, 0.3)
-
-        self.m_pos[0] += self.m_motion[0]
-        self.m_pos[1] += self.m_motion[1]
+        HANDLER.move_object(self)
 
     def render(self):
-        window.draw_buffer(self.image, self.pos)
+        window.draw_buffer(self.image, self.rect.pos)
         # draw some lines facing the direction of the motion
-        c = self.center
-        draw.DEBUG_DRAW_LINES(window.get_framebuffer(), (255, 0, 0), True, (self.topleft, self.topright, self.bottomright, self.bottomleft))
+        c = self.rect.center
+        draw.DEBUG_DRAW_LINES(window.get_framebuffer(), (255, 0, 0), True, (self.rect.topleft, self.rect.topright, self.rect.bottomright, self.rect.bottomleft))
         draw.DEBUG_DRAW_LINE(window.get_framebuffer(), (255,0,0), c, (c[0] + self.m_motion[0] * 10, c[1] + self.m_motion[1] * 10), 1)
 
 HANDLER.add_entity_auto(test())

@@ -1,19 +1,8 @@
 import pygame
 from engine import filehandler, window
+from engine.globals import *
 
-
-# chunks will have a set size of 12 x 12
-CHUNK_WIDTH = CHUNK_HEIGHT = 12
-CHUNK_TILE_WIDTH = CHUNK_TILE_HEIGHT = 64
-CHUNK_WIDTH_PIX = CHUNK_WIDTH * CHUNK_TILE_WIDTH
-CHUNK_HEIGHT_PIX = CHUNK_HEIGHT * CHUNK_TILE_HEIGHT
-CHUNK_TILE_AREA = (CHUNK_TILE_WIDTH, CHUNK_TILE_HEIGHT)
-
-TILE_X = 0
-TILE_Y = 1
-TILE_IMG = 2
-TILE_COL = 3
-
+# ---------- chunk ------------ #
 
 class Chunk:
     def __init__(self, pos: tuple):
@@ -44,7 +33,7 @@ class Chunk:
         This ensures unecassary calculations are not performed
         """
         return [x, y, img, 1]
-                        
+
     def set_tile_at(self, tile: list) -> None:
         """Set a tile at - get the tile data from Chunk.create_grid_tile()"""
         if not self.images.get(tile[TILE_IMG]):
@@ -67,6 +56,7 @@ class Chunk:
                     # render
                     window.FRAMEBUFFER.blit(self.images[block[TILE_IMG]], (block[TILE_X] + offset[0], block[TILE_Y] + offset[1]))
 
+# -------------- world ---------------- #
 
 class World:
     def __init__(self):
@@ -106,4 +96,35 @@ class World:
         """Set render distance"""
         self.r_distance = new
 
+    # --------------- physics part ----------- #
+    def move_object(self, object) -> None:
+        """
+        Move an object using AABB object
+        
+        - should be importing state.py
+        - then calling state.CURRENT.move_object(self)
+        - usually called within the object
+        """
+        pos = object.rect.pos
+        area = object.rect.area
+        motion = object.m_motion
 
+        c_area = (area[0] // CHUNK_WIDTH_PIX, area[1] // CHUNK_HEIGHT_PIX)
+
+        # loop through each chunk
+        chunks = [self.get_chunk(x, y) for x in range(object.rect.cx, object.rect.cx + c_area[0] + 1)
+            for y in range(object.rect.cy, object.rect.cy + c_area[1] + 1) if self.get_chunk(x, y)]
+        
+        # move x
+        object.rect.x += motion[0]
+        for chunk in chunks:
+            # check chunk for collisions
+            print("movex")
+            # TODO - implement collision handling
+        
+        object.rect.y += motion[1]
+        for chunk in chunks:
+            # check chunk for collisions
+            print("movey")
+            # TODO - implement collision handling
+        
