@@ -9,3 +9,10 @@ TILE_X = 0
 TILE_Y = 1
 TILE_IMG = 2
 TILE_COL = 3
+
+
+
+# serialization
+CHUNK_TILEMAP_KEY = "tile"
+CHUNK_POS_KEY = "pos"
+CHUNK_IMAGES_KEY = "images"
