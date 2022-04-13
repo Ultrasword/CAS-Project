@@ -147,9 +147,11 @@ class World:
                     if motion[0] > 0:
                         # moving right
                         object.rect.x = chunk.tile_map[yi][xi][0] - object.rect.w - 0.1
+                        object.m_motion[0] = 0
                     elif motion[0] < 0:
                         # moving left
                         object.rect.x = chunk.tile_map[yi][xi][0] + CHUNK_TILE_WIDTH + 0.1
+                        object.m_motion[0] = 0
 
         # move y
         object.rect.y += motion[1]
@@ -164,7 +166,8 @@ class World:
                     if motion[1] > 0:
                         # moving right
                         object.rect.y = chunk.tile_map[yi][xi][1] - object.rect.h - 0.1
+                        object.m_motion[1] = 0
                     elif motion[1] < 0:
                         # moving left
                         object.rect.y = chunk.tile_map[yi][xi][1] + CHUNK_TILE_HEIGHT + 0.1
-    
+                        object.m_motion[1] = 0    

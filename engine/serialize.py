@@ -52,6 +52,8 @@ class SerializeChunk(Serializable):
     
     def save_to_file(self, file_path: str, data: dict) -> None:
         """Saves data to a .json file"""
+        if not file_path.endswith(".json"):
+            file_path += ".json"
         with open(file_path, "w") as file:
             json.dump(data, file)
             file.close()

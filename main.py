@@ -34,7 +34,7 @@ for x in range(CHUNK_WIDTH):
     c.set_tile_at(c.create_grid_tile(x, 6, tile, collide=False))
 
 SC = serialize.SerializeChunk()
-SC.save_to_file("test.json", SC.serialize(c))
+SC.save_to_file("test", SC.serialize(c))
 
 img = filehandler.get_image("test/images/test1.png")
 object_data = handler.ObjectData(100, 100, 100, 100)
