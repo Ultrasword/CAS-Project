@@ -96,6 +96,26 @@ class Object:
     def bottom(self):
         """Get's bottom of object"""
         return self.m_pos[1] + self.m_area[1]
+    
+    @property
+    def topright(self):
+        """Get top right"""
+        return (self.m_pos[0] + self.m_area[0], self.m_pos[1])
+    
+    @property
+    def topleft(self):
+        """Get top left"""
+        return self.m_pos
+    
+    @property
+    def bottomright(self):
+        """Get bottom right"""
+        return (self.m_pos[0] + self.m_area[0], self.m_pos[1] + self.m_area[1])
+    
+    @property
+    def bottomleft(self):
+        """Get bottom left"""
+        return (self.m_pos[0], self.m_pos[1] + self.m_area[1])
 
     @property
     def width(self):

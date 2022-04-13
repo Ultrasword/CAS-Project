@@ -64,6 +64,7 @@ class test(handler.Object):
         window.draw_buffer(self.image, self.pos)
         # draw some lines facing the direction of the motion
         c = self.center
+        draw.DEBUG_DRAW_LINES(window.get_framebuffer(), (255, 0, 0), True, (self.topleft, self.topright, self.bottomright, self.bottomleft))
         draw.DEBUG_DRAW_LINE(window.get_framebuffer(), (255,0,0), c, (c[0] + self.m_motion[0] * 10, c[1] + self.m_motion[1] * 10), 1)
 
 HANDLER.add_entity_auto(test())

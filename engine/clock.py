@@ -25,11 +25,7 @@ def update():
     end_time = time.time()
     delta_time = end_time - start_time
     start_time = end_time
-    # find wait time
-    # wait_time = frame_time - delta_time
-    # if wait_time > 0:
-    #     delta_time += wait_time
-    #     time.sleep(wait_time)
+
 
 # TODO - create a timer object
 class Timer:

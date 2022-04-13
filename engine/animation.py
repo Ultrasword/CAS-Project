@@ -28,6 +28,7 @@ def cache_animations(animation_data: dict):
 REGISTRY_COUNT_ID = 0
 
 def GET_REGISTRY():
+    """Get the Registry"""
     global REGISTRY_COUNT_ID
     REGISTRY_COUNT_ID += 1
     return REGISTRY_COUNT_ID
@@ -35,8 +36,17 @@ def GET_REGISTRY():
 
 class AnimationRegistry:
     def __init__(self, handler):
-        """Animation Registry constructor"""
-        self.register_id = 0
+        """
+        Animation Registry constructor
+        
+        Stores the following
+        - current frame num
+        - delta time for current frame
+        - changed flag
+        - frame_dimensions: tuple(int, int)
+        - the parent animation handler object
+
+        """
         self.frame = 0
         self.time_passed = 0
         self.changed = True
@@ -45,7 +55,7 @@ class AnimationRegistry:
         # animatino handler
         self.handler = handler
     
-    def update(self, dt):
+    def update(self, dt: float) -> None:
         """Update Animation Registry"""
         self.time_passed += dt
         if self.time_passed > self.handler.frame_time:
@@ -62,7 +72,7 @@ class AnimationRegistry:
 
 # -------------- image loading functions ------------- #
 
-def iterate_load_image_list(base: str, images: list, ext:str=None):
+def iterate_load_image_list(base: str, images: list, ext: str = None) -> iter:
     """Load images and yield them"""
     for img in images:
         if ext:
@@ -71,21 +81,31 @@ def iterate_load_image_list(base: str, images: list, ext:str=None):
         yield filehandler.get_image(os.path.join(base, img))
 
 
-def load_image_list(base: str, images: list, ext:str=None)-> list:
+def load_image_list(base: str, images: list, ext: str = None)-> list:
     """Load images from a list of strings"""
     return list(iterate_load_image_list(base, images, ext=ext))
 
 
 class AnimationHandler:
     def __init__(self, name: str, images: list, image_sizes: list, fps: int):
-        """Animation Handler constructor"""
+        """
+        Animation Handler constructor
+        
+        Stores the animation data for a particular animation
+        - the name of the animation
+        - images in the animation
+        - image sizes: in case frame must stretch | no need for slow image scaling from software
+        - ideal frame_time for good animation fps
+        - frame count: int - number of frames in animation
+        """
+
         self.name = name
         self.images = images
         self.image_sizes = image_sizes
         self.frame_time = 1/fps
         self.frame_count = len(images)
 
-    def get_registry(self):
+    def get_registry(self) -> AnimationRegistry:
         """Register a registry to this animation handler"""
         return AnimationRegistry(self)
 
