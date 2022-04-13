@@ -72,16 +72,14 @@ class AnimationRegistry:
 
 # -------------- image loading functions ------------- #
 
-def iterate_load_image_list(base: str, images: list, ext: str = None) -> iter:
+def iterate_load_image_list(base: str, images: list, ext: str = "", pre: str = "") -> iter:
     """Load images and yield them"""
     for img in images:
-        if ext:
-            img += ext
-        print(os.path.join(base, img))
-        yield filehandler.get_image(os.path.join(base, img))
+        print(os.path.join(base, pre + img + ext))
+        yield filehandler.get_image(os.path.join(base, pre + img + ext))
 
 
-def load_image_list(base: str, images: list, ext: str = None)-> list:
+def load_image_list(base: str, images: list, ext: str = "", pre: str = "")-> list:
     """Load images from a list of strings"""
     return list(iterate_load_image_list(base, images, ext=ext))
 
@@ -119,7 +117,8 @@ def create_animation_handler_from_json(json_path: str) -> AnimationHandler:
     base_path = data["base_path"]
     image_paths = data["images"]
     fps = data["fps"]
-    ext = data.get("ext")
+    pre = data.get("pre", "")
+    ext = data.get("ext", "")
     sizes = data.get("sizes")
     size = data.get("size")
     
@@ -127,7 +126,7 @@ def create_animation_handler_from_json(json_path: str) -> AnimationHandler:
 
     # load images
     result_images = []
-    for i, result in enumerate(iterate_load_image_list(base_path, image_paths, ext=ext)):
+    for i, result in enumerate(iterate_load_image_list(base_path, image_paths, ext=ext, pre=pre)):
         if dif_sizes:
             # you should index to the right size
             result_images.append(filehandler.scale(result, sizes[i]))

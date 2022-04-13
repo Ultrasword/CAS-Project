@@ -2,7 +2,7 @@ import pygame
 
 import engine
 from engine import window, clock, user_input, handler, draw
-from engine import filehandler, maths, animation, state
+from engine import filehandler, maths, animation, state, serialize
 from engine.globals import *
 
 
@@ -33,6 +33,8 @@ for x in range(CHUNK_WIDTH):
 for x in range(CHUNK_WIDTH):
     c.set_tile_at(c.create_grid_tile(x, 6, tile, collide=False))
 
+SC = serialize.SerializeChunk()
+SC.save_to_file("test.json", SC.serialize(c))
 
 img = filehandler.get_image("test/images/test1.png")
 object_data = handler.ObjectData(100, 100, 100, 100)

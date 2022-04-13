@@ -34,7 +34,24 @@ class Serializable:
 class SerializeChunk(Serializable):
     def __init__(self):
         """Serialize chunks"""
+        super().__init__()
+
+    def serialize(self, chunk) -> dict:
+        """
+        Serialize object
         
-        pass
+        chunk.images = {file path: pygame image object}
+        - extract the image paths and convert to an integer
 
-
+        """
+        result = {}
+        result[CHUNK_TILEMAP_KEY] = chunk.tile_map
+        result[CHUNK_POS_KEY] = chunk.pos
+        result[CHUNK_IMAGES_KEY] = {id: val for id, val in enumerate(chunk.images.keys())}
+        return result
+    
+    def save_to_file(self, file_path: str, data: dict) -> None:
+        """Saves data to a .json file"""
+        with open(file_path, "w") as file:
+            json.dump(data, file)
+            file.close()
