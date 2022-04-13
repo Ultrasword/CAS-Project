@@ -1,7 +1,7 @@
 import pygame
 
 import engine
-from engine import window, clock, user_input, handler, draw, filehandler, maths, animation
+from engine import window, clock, user_input, handler, draw, filehandler, maths, animation, state, world
 
 
 background = (255, 255, 255)
@@ -14,12 +14,19 @@ window.change_framebuffer(1280, 720, pygame.SRCALPHA)
 
 
 # handler object -> # TODO - abstract later 
-HANDLER = handler.Handler()
+HANDLER = state.State()
+state.push_state(HANDLER)
 
 
 # -------- testing ------ #
 
 data = animation.create_animation_handler_from_json("assets/animations/tomato/tomato.json")
+
+tile = "assets/terrain/dirt.png"
+c = HANDLER.make_template_chunk(0, 0)
+for x in range(world.CHUNK_WIDTH):
+    for y in range(world.CHUNK_HEIGHT):
+        c.set_tile_at(c.create_grid_tile(x, y, tile))
 
 
 img = filehandler.get_image("test/images/test1.png")
@@ -80,7 +87,7 @@ while running:
     window.fill_buffer(background)
 
     # updates
-    HANDLER.handle_entities(clock.delta_time)
+    HANDLER.update(clock.delta_time)
 
     # render
     window.push_buffer((0,0))
