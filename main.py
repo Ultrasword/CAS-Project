@@ -33,9 +33,6 @@ for x in range(CHUNK_WIDTH):
 for x in range(CHUNK_WIDTH):
     c.set_tile_at(c.create_grid_tile(x, 6, tile, collide=False))
 
-SC = serialize.SerializeChunk()
-SC.save_to_file("test", SC.serialize(c))
-
 
 img = filehandler.get_image("test/images/test1.png")
 object_data = handler.ObjectData(100, 100, 100, 100)
@@ -49,14 +46,14 @@ class test(handler.Object):
         # self.image = filehandler.scale(img, self.area)
         # animation test
         self.ani_registry = data.get_registry()
-        self.image = self.ani.get_frame()
+        self.image = self.ani_registry.get_frame()
         # set new area
-        self.rect.area = self.ani.frame_dim
+        self.rect.area = self.ani_registry.frame_dim
 
     def update(self, dt):
         self.ani_registry.update(dt)
         if self.ani_registry.changed:
-            self.image = self.ani.get_frame()
+            self.image = self.ani_registry.get_frame()
 
         # print(dt)
         if user_input.is_key_pressed(pygame.K_a):
@@ -81,6 +78,9 @@ class test(handler.Object):
         draw.DEBUG_DRAW_LINE(window.get_framebuffer(), (255,0,0), c, (c[0] + self.m_motion[0] * 10, c[1] + self.m_motion[1] * 10), 1)
 
 HANDLER.add_entity_auto(test())
+
+SC = serialize.SerializeState()
+serialize.Serializable.save_to_file("test.json", SC.serialize(HANDLER))
 
 
 # ------------ Game Loop ----------- #

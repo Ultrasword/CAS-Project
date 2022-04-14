@@ -78,7 +78,7 @@ class SerializeWorld(Serializable):
             - chunks
         """
         result = {}
-        result[WORLD_CHUNK_KEY] = [self.chunk_serializer(chunk) for _, chunk in world.chunks.items()]
+        result[WORLD_CHUNK_KEY] = [self.chunk_serializer.serialize(chunk) for _, chunk in world.chunks.items()]
         return result
 
 
