@@ -37,7 +37,7 @@ for x in range(CHUNK_WIDTH):
 img = filehandler.get_image("test/images/test1.png")
 object_data = handler.ObjectData(100, 100, 100, 100)
 
-class test(handler.Object):
+class test(handler.PersistentObject):
     def __init__(self):
         super().__init__()
         # set params
@@ -79,8 +79,8 @@ class test(handler.Object):
 
 HANDLER.add_entity_auto(test())
 
-SC = serialize.SerializeState()
-serialize.Serializable.save_to_file("test.json", SC.serialize(HANDLER))
+# SC = serialize.SerializeState()
+# serialize.Serializable.save_to_file("test.json", SC.serialize(HANDLER))
 
 
 # ------------ Game Loop ----------- #

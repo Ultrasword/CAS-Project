@@ -2,6 +2,9 @@
 Contains functions and methods for serializing level data
 
 Serializable objects:
+- Rect
+- Animation
+- Entity
 - Chunk
 - World
 - Handler
@@ -56,7 +59,7 @@ class SerializeChunk(Serializable):
         result = {}
         result[CHUNK_TILEMAP_KEY] = chunk.tile_map
         result[CHUNK_POS_KEY] = chunk.pos
-        result[CHUNK_IMAGES_KEY] = {id: val for id, val in enumerate(chunk.images.keys())}
+        result[CHUNK_IMAGES_KEY] = {imid: val for imid, val in enumerate(chunk.images.keys())}
         return result
 
 
@@ -96,16 +99,17 @@ class SerializeAnimation(Serializable):
         - gets the filepath and thats about it
         """
         result = {}
-        result[ANIMATION_PATH_KEY] = animation.handler.json_path
-        result[ANIMATION_NAME_KEY] = animation.handler.name
+        result[ANIMATION_PATH_KEY] = animation_registry.handler.json_path
+        result[ANIMATION_NAME_KEY] = animation_registry.handler.name
         return result
+
 
 # --------- Serialize Entity ------------ #
 
 class SerializeEntity(Serializable):
     def __init__(self):
         """Serialize Entity constructor"""
-        pass
+        super().__init__()
 
     def serialize(self, entity) -> dict:
         """
@@ -116,9 +120,9 @@ class SerializeEntity(Serializable):
         """
         result = {}
         # serialize the rect
-        result[ENTITY_RECT_KEY] = [entity.rect.serialize()]
+        result[ENTITY_RECT_KEY] = entity.rect.serialize()
         # serialize animation
-        result[ENTITY_ANIMATION_KEY] = self.animation_serializer.serialize(entity.ani_registry) if entity.ani_registry else None
+        result[ENTITY_ANIMATION_KEY] = None if not entity.ani_registry else entity.ani_registry.handler.name
         return result
 
 
@@ -144,15 +148,18 @@ class SerializeHandler(Serializable):
         animations = {}
         entities = {}
         for eid, entity in handler.p_objects.items():
-            entities[eid] = self.entity_serializer(entity)
+            entities[eid] = self.entity_serializer.serialize(entity)
             # check if has an ani_registry
             if entity.ani_registry:
                 block = self.animation_serializer.serialize(entity.ani_registry)
                 animations[block[ANIMATION_NAME_KEY]] = block
+
         result[HANDLER_DATA_KEY] = entities
         result[HANDLER_ANIMATION_KEY] = animations
         return result
 
+
+# --------- Serialize State -------------- #
 
 class SerializeState(Serializable):
     def __init__(self):
