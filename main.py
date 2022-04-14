@@ -36,6 +36,7 @@ for x in range(CHUNK_WIDTH):
 SC = serialize.SerializeChunk()
 SC.save_to_file("test", SC.serialize(c))
 
+
 img = filehandler.get_image("test/images/test1.png")
 object_data = handler.ObjectData(100, 100, 100, 100)
 
@@ -47,14 +48,14 @@ class test(handler.Object):
         # image
         # self.image = filehandler.scale(img, self.area)
         # animation test
-        self.ani = data.get_registry()
+        self.ani_registry = data.get_registry()
         self.image = self.ani.get_frame()
         # set new area
         self.rect.area = self.ani.frame_dim
 
     def update(self, dt):
-        self.ani.update(dt)
-        if self.ani.changed:
+        self.ani_registry.update(dt)
+        if self.ani_registry.changed:
             self.image = self.ani.get_frame()
 
         # print(dt)

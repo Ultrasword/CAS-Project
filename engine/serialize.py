@@ -64,9 +64,122 @@ class SerializeChunk(Serializable):
 
 class SerializeWorld(Serializable):
     def __init__(self):
-        """Serialize World Constructor"""
+        """Serialize world constructor"""
         super().__init__()
-    
-    def serialize(self) -> dict:
+
+        self.chunk_serializer = SerializeChunk()
+
+    def serialize(self, world) -> dict:
+        """
+        Serialize World
+
+        - serializes all chunks contained within the world
+        - important keys
+            - chunks
+        """
+        result = {}
+        result[WORLD_CHUNK_KEY] = [self.chunk_serializer(chunk) for _, chunk in world.chunks.items()]
+        return result
+
+
+# --------- Serialize Animation --------- #
+
+class SerializeAnimation(Serializable):
+    def __init__(self):
+        """Serialize Animation constructor"""
+        super().__init__()
+
+    def serialize(self, animation_registry) -> dict:
+        """
+        Serialize Animation
+
+        - gets the filepath and thats about it
+        """
+        result = {}
+        result[ANIMATION_PATH_KEY] = animation.handler.json_path
+        result[ANIMATION_NAME_KEY] = animation.handler.name
+        return result
+
+# --------- Serialize Entity ------------ #
+
+class SerializeEntity(Serializable):
+    def __init__(self):
+        """Serialize Entity constructor"""
         pass
- 
+
+    def serialize(self, entity) -> dict:
+        """
+        Serialize Entity
+
+        - rect data
+        - animatino data | if it exists
+        """
+        result = {}
+        # serialize the rect
+        result[ENTITY_RECT_KEY] = [entity.rect.serialize()]
+        # serialize animation
+        result[ENTITY_ANIMATION_KEY] = self.animation_serializer.serialize(entity.ani_registry) if entity.ani_registry else None
+        return result
+
+
+# --------- Serialize Handler ----------- #
+
+class SerializeHandler(Serializable):
+    def __init__(self):
+        """Serialize handler construcstor"""
+        super().__init__()
+
+        self.entity_serializer = SerializeEntity()
+        self.animation_serializer = SerializeAnimation()
+
+    def serialize(self, handler) -> dict:
+        """
+        Serialize Handler
+        - stores all entity data and serializes it
+        - serializes the different animations as well :D
+        """
+        result = {}
+        
+        # find animations and entities
+        animations = {}
+        entities = {}
+        for eid, entity in handler.p_objects.items():
+            entities[eid] = self.entity_serializer(entity)
+            # check if has an ani_registry
+            if entity.ani_registry:
+                block = self.animation_serializer.serialize(entity.ani_registry)
+                animations[block[ANIMATION_NAME_KEY]] = block
+        result[HANDLER_DATA_KEY] = entities
+        result[HANDLER_ANIMATION_KEY] = animations
+        return result
+
+
+class SerializeState(Serializable):
+    def __init__(self):
+        """Serialize State Constructor"""
+        super().__init__()
+
+        self.handler_serializer = SerializeHandler()
+        self.world_serializer = SerializeWorld()
+
+
+    def serialize(self, state) -> dict:
+        """
+        Serialize State
+
+        - serialize the world and the handler
+        - world will consists of
+            - world.chunks = {}
+        """
+        
+        result = {}
+        
+        # get handler data
+        handler_data = self.handler_serializer.serialize(state)
+        world_data = self.world_serializer.serialize(state)
+        
+        result[STATE_HANDLER_KEY] = handler_data
+        result[STATE_WORLD_KEY] = world_data
+        return result
+
+

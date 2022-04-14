@@ -43,6 +43,9 @@ class Rect:
     cx: int = 0
     cy: int = 0
 
+    def serialize(self):
+        """Convert data to a dict"""
+        return [self.x, self.y, self.w, self.h]
 
     @property
     def center(self):
@@ -173,12 +176,22 @@ class Object:
     """
 
     def __init__(self):
-        """Constructor for Object class"""
+        """
+        Constructor for Object class
+        
+        Contains data:
+            - object id: int
+            - rect: Rect object
+            - ani_registry: the Animation Registry object from animation.py
+            - m_motion: list | holds x movement and y movement
+            - touching: Touching object | determines if object is touching on each side of the rect
+        """
         # object identification
         self.object_id = 0
 
         # standard variables - this is just the object rect 
         self.rect = Rect(0, 0, 0, 0)
+        self.ani_registry = None
 
         # physics properties
         self.m_motion = [0.0, 0.0]

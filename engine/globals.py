@@ -16,3 +16,18 @@ TILE_COL = 3
 CHUNK_TILEMAP_KEY = "tile"
 CHUNK_POS_KEY = "pos"
 CHUNK_IMAGES_KEY = "images"
+
+ANIMATION_PATH_KEY = "a_path"
+ANIMATION_NAME_KEY = "a_name"
+
+ENTITY_RECT_KEY = "rect"
+ENTITY_ANIMATION_KEY = "animation"
+
+HANDLER_DATA_KEY = "entities"
+HANDLER_ANIMATION_KEY = "animation"
+
+WORLD_DATA_KEY = "world"
+WORLD_CHUNK_KEY = "chunks"
+
+STATE_HANDLER_KEY = "handler"
+STATE_WORLD_KEY = "world"

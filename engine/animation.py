@@ -85,7 +85,7 @@ def load_image_list(base: str, images: list, ext: str = "", pre: str = "")-> lis
 
 
 class AnimationHandler:
-    def __init__(self, name: str, images: list, image_sizes: list, fps: int):
+    def __init__(self, json_path: str, name: str, images: list, image_sizes: list, fps: int):
         """
         Animation Handler constructor
         
@@ -97,6 +97,7 @@ class AnimationHandler:
         - frame count: int - number of frames in animation
         """
 
+        self.json_path = json_path
         self.name = name
         self.images = images
         self.image_sizes = image_sizes
@@ -135,4 +136,4 @@ def create_animation_handler_from_json(json_path: str) -> AnimationHandler:
             result_images.append(filehandler.scale(result, size))
     
     # create animation handler
-    return AnimationHandler(name, result_images, sizes if dif_sizes else [size for i in range(len(image_paths))], fps)
+    return AnimationHandler(json_path, name, result_images, sizes if dif_sizes else [size for i in range(len(image_paths))], fps)
