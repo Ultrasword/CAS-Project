@@ -66,6 +66,7 @@ class DeserializeChunk(Deserializable):
 
 
 # ------- Deserialize World -------------- #
+# TODO - implement rest
 
 class DeserializeWorld(Deserializable):
     def __init__(self):
@@ -82,8 +83,10 @@ class DeserializeWorld(Deserializable):
         - important keys
             - chunks
         """
-        result = {}
-        result[WORLD_CHUNK_KEY] = [self.chunk_deserializer.deserialize(chunk) for _, chunk in world.chunks.items()]
+        result = world.World()
+        # deserialize all chunks
+        for chunk in world[WORLD_CHUNK_KEY]:
+            result.add_chunk(self.chunk_deserializer.deserialize(chunk))
         return result
 
 
@@ -100,9 +103,8 @@ class DeserializeAnimation(Deserializable):
 
         - gets the filepath and thats about it
         """
-        result = {}
-        result[ANIMATION_PATH_KEY] = animation_registry.handler.json_path
-        result[ANIMATION_NAME_KEY] = animation_registry.handler.name
+
+        result = animation.create_animation_handler_from_json(animation_registry[ANIMATION_PATH_KEY])
         return result
 
 
@@ -120,6 +122,7 @@ class DeserializeEntity(Deserializable):
         - rect data
         - animatino data | if it exists
         """
+
         result = {}
         # deserialize the rect
         result[ENTITY_RECT_KEY] = entity.rect.deserialize()

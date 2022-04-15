@@ -38,7 +38,7 @@ class Serializable:
         if not file_path.endswith(".json"):
             file_path += ".json"
         with open(file_path, "w") as file:
-            json.dump(data, file)
+            json.dump(data, file) # indent=4)
             file.close()
 
 # ------- Serialize chunks ------------- #
@@ -123,6 +123,8 @@ class SerializeEntity(Serializable):
         result[ENTITY_RECT_KEY] = entity.rect.serialize()
         # serialize animation
         result[ENTITY_ANIMATION_KEY] = None if not entity.ani_registry else entity.ani_registry.handler.name
+        # serialize the entity type
+        result[ENTITY_TYPE_KEY] = str(pickle.dumps(type(entity), protocol=4))
         return result
 
 

@@ -22,6 +22,7 @@ ANIMATION_NAME_KEY = "a_name"
 
 ENTITY_RECT_KEY = "rect"
 ENTITY_ANIMATION_KEY = "animation"
+ENTITY_TYPE_KEY = "type"
 
 HANDLER_DATA_KEY = "entities"
 HANDLER_ANIMATION_KEY = "animation"
