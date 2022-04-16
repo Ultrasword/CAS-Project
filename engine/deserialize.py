@@ -51,6 +51,9 @@ class DeserializeChunk(Deserializable):
         - extract the image paths and convert to an integer
 
         """
+
+        # TODO - add in compatibility for the SpriteSheet objects
+
         result = world.Chunk(chunk[CHUNK_POS_KEY])
         
         # create image cache for chunk
@@ -66,7 +69,7 @@ class DeserializeChunk(Deserializable):
 
 
 # ------- Deserialize World -------------- #
-# TODO - implement rest
+# TODO - implement rest #
 
 class DeserializeWorld(Deserializable):
     def __init__(self):

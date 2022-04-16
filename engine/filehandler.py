@@ -1,5 +1,7 @@
 import pygame
 
+# pygame flags
+SRC_ALPHA = pygame.SRCALPHA
 
 # TODO - design a resizing system when loading images
 
@@ -40,5 +42,10 @@ def yflip(img):
 
 def make_surface(width, height, flags=0):
     """Make a surface object and return it"""
-    return pygame.Surface((width, height), flags).convert()
+    return pygame.Surface((width, height), flags).convert_alpha()
+
+
+def crop_image(source, target, source_area):
+    """Crop source onto target given areas"""
+    target.blit(source, (0, 0), source_area)
 

@@ -3,6 +3,7 @@ import pygame
 import engine
 from engine import window, clock, user_input, handler, draw
 from engine import filehandler, maths, animation, state, serialize
+from engine import spritesheet
 from engine.globals import *
 
 

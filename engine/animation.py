@@ -76,7 +76,7 @@ def iterate_load_image_list(base: str, images: list, ext: str = "", pre: str = "
     """Load images and yield them"""
     for img in images:
         # print(os.path.join(base, pre + img + ext))
-        yield filehandler.get_image(os.path.join(base, pre + img + ext))
+        yield filehandler.get_image(os.path.join(base, (pre if pre else "") + img +( ext if ext else "")))
 
 
 def load_image_list(base: str, images: list, ext: str = "", pre: str = "")-> list:

@@ -32,3 +32,11 @@ WORLD_CHUNK_KEY = "chunks"
 
 STATE_HANDLER_KEY = "handler"
 STATE_WORLD_KEY = "world"
+
+
+
+# world rendering
+
+SPRITE_OBJECT_PREFIX = "spr_o_"
+
+SPRITE_OBJECT_KEY = "sprite"

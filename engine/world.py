@@ -1,6 +1,70 @@
+"""
+world.py
+
+Chunks:
+- chunk_id
+- position (x, y)
+- world_pos (x, y)
+- image_cache: map of images
+- tile_map: ALL THE TILES- THE GLORY IS REAL
+
+World:
+- chunks: map of chunks
+- r_distance: render distance
+
+What an amazing file; we have so much cool stuff!
+
+
+"""
+
+
 import pygame
 from engine import filehandler, window
 from engine.globals import *
+
+from dataclasses import dataclass
+
+# ---------- tile ------------- #
+
+@dataclass(init=False)
+class Tile:
+    """
+    Tile object
+    - stores what tiles store ;-;
+    """
+
+    x: int
+    y: int
+    img: str
+    collide: int
+    extra: dict
+
+    def __init__(self, x: int, y: int, img: str, collide: int):
+        """Tile constructor"""
+        self.x = x
+        self.y = y
+        self.img = img
+        self.collide = collide
+        self.extra = {}
+
+    def render(self, images: dict, offset: tuple = (0, 0)) -> None:
+        """Render function for this tile"""
+        # I have no idea if this will be slower
+        # i don't know how python function stack works 
+        # if has intelligence on this topic, please inform me :D
+        if self.img:
+            window.FRAMEBUFFER.blit(images[self.img], (self.x + offset[0], self.y + offset[1]))
+    
+    def cache_image(self, cache) -> None:
+        """Cache the image"""
+        if not cache.get(self.img):
+            cache[self.img] = filehandler.scale(filehandler.get_image(self.img), CHUNK_TILE_AREA)
+
+    def set_tile_with(self, _tile) -> None:
+        """Set the data within the other_tile"""
+        _tile.img = self.img
+        _tile.collide = self.collide
+
 
 # ---------- chunk ------------ #
 
@@ -32,44 +96,42 @@ class Chunk:
         
         This ensures unecassary calculations are not performed
         """
-        return [x, y, img, collide]
+        # return [x, y, img, collide]
+        return Tile(x, y, img, collide)
 
-    def set_tile_at(self, tile: list) -> None:
+    def set_tile_at(self, tile) -> None:
         """Set a tile at - get the tile data from Chunk.create_grid_tile()"""
-        if not self.images.get(tile[TILE_IMG]):
-            # load the image - with the img size
-            self.images[tile[TILE_IMG]] = filehandler.scale(filehandler.get_image(tile[TILE_IMG]), CHUNK_TILE_AREA)
-        # set the data in the cache
-        x, y = tile[TILE_X], tile[TILE_Y]
-        self.tile_map[y][x][TILE_X] = x * CHUNK_TILE_WIDTH + self.world_pos[0]
-        self.tile_map[y][x][TILE_Y] = y * CHUNK_TILE_HEIGHT + self.world_pos[1]
-        self.tile_map[y][x][TILE_IMG] = tile[TILE_IMG]
-        self.tile_map[y][x][TILE_COL] = tile[TILE_COL]
+        tile.cache_image(self.images)
+        # get the object in cache
+        block = self.tile_map[tile.y][tile.x]
+        block.x = tile.x * CHUNK_TILE_WIDTH + self.world_pos[0]
+        block.y = tile.y * CHUNK_TILE_HEIGHT + self.world_pos[1]
+
+        # set tile with custom function
+        tile.set_tile_with(block)
 
     def render(self, offset: tuple = (0, 0)) -> None:
         """Renders all the grid tiles and non tile objects"""
         for x in range(CHUNK_WIDTH):
             for y in range(CHUNK_HEIGHT):
                 # get block data
-                block = self.tile_map[y][x]
-                if block[TILE_IMG]:
-                    # render
-                    window.FRAMEBUFFER.blit(self.images[block[TILE_IMG]], (block[TILE_X] + offset[0], block[TILE_Y] + offset[1]))
+                self.tile_map[y][x].render(self.images, offset=offset)
 
     def is_collide(self, x: int, y: int, rect) -> bool:
         """Check if a block is collided with the chunk block"""
         block = self.tile_map[y][x]
-        if not block[TILE_COL]:
-            return block[TILE_COL]
-        if block[TILE_X] > rect.right:
+        if not block.collide:
+            return block.collide
+        if block.x > rect.right:
             return False
-        if block[TILE_Y] > rect.bottom:
+        if block.y > rect.bottom:
             return False
-        if block[TILE_X] + CHUNK_TILE_WIDTH < rect.left:
+        if block.x + CHUNK_TILE_WIDTH < rect.left:
             return False
-        if block[TILE_Y] + CHUNK_TILE_HEIGHT < rect.top:
+        if block.y + CHUNK_TILE_HEIGHT < rect.top:
             return False
         return True
+
 
 # -------------- world ---------------- #
 
@@ -146,11 +208,11 @@ class World:
                     # check for motion
                     if motion[0] > 0:
                         # moving right
-                        object.rect.x = chunk.tile_map[yi][xi][0] - object.rect.w - 0.1
+                        object.rect.x = chunk.tile_map[yi][xi].x - object.rect.w - 0.1
                         object.m_motion[0] = 0
                     elif motion[0] < 0:
                         # moving left
-                        object.rect.x = chunk.tile_map[yi][xi][0] + CHUNK_TILE_WIDTH + 0.1
+                        object.rect.x = chunk.tile_map[yi][xi].x + CHUNK_TILE_WIDTH + 0.1
                         object.m_motion[0] = 0
 
         # move y
@@ -165,9 +227,9 @@ class World:
                     # check for motion
                     if motion[1] > 0:
                         # moving right
-                        object.rect.y = chunk.tile_map[yi][xi][1] - object.rect.h - 0.1
+                        object.rect.y = chunk.tile_map[yi][xi].y - object.rect.h - 0.1
                         object.m_motion[1] = 0
                     elif motion[1] < 0:
                         # moving left
-                        object.rect.y = chunk.tile_map[yi][xi][1] + CHUNK_TILE_HEIGHT + 0.1
+                        object.rect.y = chunk.tile_map[yi][xi].y + CHUNK_TILE_HEIGHT + 0.1
                         object.m_motion[1] = 0    
