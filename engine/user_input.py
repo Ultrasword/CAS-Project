@@ -15,12 +15,16 @@ def key_press(key_event):
 def key_release(key_event):
     """Sets a key to be released"""
     keys[key_event.key] = False
-    pressed.add(key_event.key)
 
 
 def is_key_pressed(key):
     """Returns if a key is pressed"""
     return keys.get(key, False)
+
+
+def is_key_clicked(key):
+    """Return if a key was clicked"""
+    return key in pressed
 
 
 def update():

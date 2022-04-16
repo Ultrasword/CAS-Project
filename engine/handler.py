@@ -43,9 +43,23 @@ class Rect:
     cx: int = 0
     cy: int = 0
 
+    def __init__(self, x: int, y: int, w: int, h: int):
+        """Rect constructor"""
+        self.x = x
+        self.y = y
+        self.w = w 
+        self.h = h
+        self.cx = self.x // CHUNK_WIDTH_PIX
+        self.cy = self.y // CHUNK_HEIGHT_PIX
+
     def serialize(self):
         """Convert data to a dict"""
         return [self.x, self.y, self.w, self.h]
+    
+    @staticmethod
+    def deserialize(self, data):
+        """Deserialize data to create Rect"""
+        return Rect(data[RECT_X_KEY], data[RECT_Y_KEY], data[RECT_W_KEY], data[RECT_H_KEY])
 
     @property
     def center(self):
@@ -139,6 +153,8 @@ class Rect:
     @property
     def chunk(self):
         """Return chunk pos"""
+        self.cx = self.x // CHUNK_WIDTH_PIX
+        self.cy = self.y // CHUNK_HEIGHT_PIX
         return (self.cx, self.cy)
 
 
@@ -194,7 +210,9 @@ class Object:
         self.ani_registry = None
 
         # physics properties
+        self.p_motion = [0.0, 0.0]
         self.m_motion = [0.0, 0.0]
+        self.m_moving = [False, False]
         self.touching = Touching(False, False, False, False)
 
     @property
@@ -202,7 +220,7 @@ class Object:
         """Get the object id"""
         return self.object_id
     
-    def update(self, dt):
+    def update(self, dt: float) -> None:
         """Default update method"""
         pass
     
@@ -213,6 +231,23 @@ class Object:
     def render(self):
         """Default render function"""
         pass
+
+    @property
+    def animation(self):
+        """Get the object animation registry"""
+        return self.ani_registry
+    
+    @animation.setter
+    def animation(self, other):
+        """Set the animation"""
+        self.ani_registry = other
+    
+    def update_animation(self, dt: float) -> None:
+        """Updates the animation registry if it exists"""
+        if self.ani_registry:
+            self.ani_registry.update(dt)
+            if self.ani_registry.changed:
+                self.image = self.ani_registry.get_frame()
 
 
 class PersistentObject(Object):

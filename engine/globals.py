@@ -20,9 +20,23 @@ CHUNK_IMAGES_KEY = "images"
 ANIMATION_PATH_KEY = "a_path"
 ANIMATION_NAME_KEY = "a_name"
 
+RECT_X_KEY = "x"
+RECT_Y_KEY = "y"
+RECT_W_KEY = "w"
+RECT_H_KEY = "h"
+
 ENTITY_RECT_KEY = "rect"
 ENTITY_ANIMATION_KEY = "animation"
 ENTITY_TYPE_KEY = "type"
+
+SPRITETILE_INDEX_KEY = "index"
+SPRITETILE_RECT_KEY = "rect"
+SPRITETILE_PARENT_IMAGE_KEY = "parent_str"
+
+SPRITESHEET_IMAGE_PATH_KEY = "s_path"
+SPRITESHEET_SPRITES_KEY = "s_tiles"
+SPRITESHEET_SPRITE_AREA_KEY = "s_area"
+SPRITESHEET_SPACING_KEY = "s_spacing"
 
 HANDLER_DATA_KEY = "entities"
 HANDLER_ANIMATION_KEY = "animation"
@@ -32,6 +46,7 @@ WORLD_CHUNK_KEY = "chunks"
 
 STATE_HANDLER_KEY = "handler"
 STATE_WORLD_KEY = "world"
+STATE_IMAGES_KEY  = "images"
 
 
 

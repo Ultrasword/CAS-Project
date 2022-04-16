@@ -6,6 +6,8 @@ from engine import filehandler, maths, animation, state, serialize
 from engine import spritesheet
 from engine.globals import *
 
+from scripts import player
+
 
 background = (255, 255, 255)
 
@@ -78,7 +80,11 @@ class test(handler.PersistentObject):
         draw.DEBUG_DRAW_LINES(window.get_framebuffer(), (255, 0, 0), True, (self.rect.topleft, self.rect.topright, self.rect.bottomright, self.rect.bottomleft))
         draw.DEBUG_DRAW_LINE(window.get_framebuffer(), (255,0,0), c, (c[0] + self.m_motion[0] * 10, c[1] + self.m_motion[1] * 10), 1)
 
-HANDLER.add_entity_auto(test())
+
+player.__init__()
+
+
+HANDLER.add_entity_auto(player.Player())
 
 # SC = serialize.SerializeState()
 # serialize.Serializable.save_to_file("test.json", SC.serialize(HANDLER))

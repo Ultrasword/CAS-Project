@@ -105,6 +105,7 @@ class SpriteSheet:
 
     def __init__(self, image: str, sprite_width: int, sprite_height: int, x_space: int = 0, y_space: int = 0):
         """Sprite Sheet Constructor"""
+        self.sheet_path = image
         self.sheet = filehandler.get_image(image)
         self.sprites = []
         self.area = self.sheet.get_size()

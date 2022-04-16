@@ -43,11 +43,11 @@ class DeserializeChunk(Deserializable):
         """Deserialize chunks"""
         super().__init__()
 
-    def deserialize(self, chunk) -> world.Chunk:
+    def deserialize(self, chunk, spritesheets) -> world.Chunk:
         """
         Deserialize object
         
-        chunk.images = {file path: pygame image object}
+        chunk.images = {file path: pygame imawge object}
         - extract the image paths and convert to an integer
 
         """
@@ -186,6 +186,15 @@ class DeserializeState(Deserializable):
         - world will consists of
             - world.chunks = {}
         """
+
+        result = state.State()
+
+        # load handler part
+        spritesheets = None
+        handler = self.handler_deserializer.deserialize(state[STATE_HANDLER_KEY])
+        world = self.world_deserializer.deserialize(state[STATE_WORLD_KEY])
+
+        # load world part
         
         result = {}
         
