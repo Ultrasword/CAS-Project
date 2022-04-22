@@ -20,75 +20,22 @@ window.change_framebuffer(1280, 720, pygame.SRCALPHA)
 player.__init__()
 
 # handler object -> # TODO - abstract later 
-HANDLER = state.State()
+HANDLER = state.State.deserialize(serialize.load_json_data("test.json"))
 state.push_state(HANDLER)
 
 
 # -------- testing ------ #
 
-data = animation.create_animation_handler_from_json("assets/animations/tomato/tomato.json")
-
-tile = "assets/terrain/dirt.png"
-c = HANDLER.make_template_chunk(0, 0)
-# for x in range(world.CHUNK_WIDTH):
-#     for y in range(world.CHUNK_HEIGHT):
-#         c.set_tile_at(c.create_grid_tile(x, y, tile))
-for x in range(CHUNK_WIDTH):
-    c.set_tile_at(c.create_grid_tile(x, 7, tile, collide=True))
-for x in range(CHUNK_WIDTH):
-    c.set_tile_at(c.create_grid_tile(x, 6, tile, collide=False))
+# HANDLER = state.State()
+# state.push_state(HANDLER)
+# c = HANDLER.make_template_chunk(0, 0)
+# for x in range(CHUNK_WIDTH):
+#     c.set_tile_at(c.create_grid_tile(x, 6, "assets/terrain/dirt.png", 1))
 
 
-img = filehandler.get_image("test/images/test1.png")
-object_data = handler.ObjectData(100, 100, 100, 100)
+# HANDLER.add_entity_auto(player.Player())
 
-class test(handler.PersistentObject):
-    def __init__(self):
-        super().__init__()
-        # set params
-        object_data.set_object_params(self)
-        # image
-        # self.image = filehandler.scale(img, self.area)
-        # animation test
-        self.ani_registry = data.get_registry()
-        self.image = self.ani_registry.get_frame()
-        # set new area
-        self.rect.area = self.ani_registry.frame_dim
-
-    def update(self, dt):
-        self.ani_registry.update(dt)
-        if self.ani_registry.changed:
-            self.image = self.ani_registry.get_frame()
-
-        # print(dt)
-        if user_input.is_key_pressed(pygame.K_a):
-            self.m_motion[0] -= 100 * dt
-        if user_input.is_key_pressed(pygame.K_d):
-            self.m_motion[0] += 100 * dt
-        if user_input.is_key_pressed(pygame.K_w):
-            self.m_motion[1] -= 100 * dt
-        if user_input.is_key_pressed(pygame.K_s):
-            self.m_motion[1] += 100 * dt
-        
-        # lerp
-        self.m_motion[0] = maths.lerp(self.m_motion[0], 0.0, 0.3)
-        self.m_motion[1] = maths.lerp(self.m_motion[1], 0.0, 0.3)
-        HANDLER.move_object(self)
-
-    def render(self):
-        window.draw_buffer(self.image, self.rect.pos)
-        # draw some lines facing the direction of the motion
-        c = self.rect.center
-        draw.DEBUG_DRAW_LINES(window.get_framebuffer(), (255, 0, 0), True, (self.rect.topleft, self.rect.topright, self.rect.bottomright, self.rect.bottomleft))
-        draw.DEBUG_DRAW_LINE(window.get_framebuffer(), (255,0,0), c, (c[0] + self.m_motion[0] * 10, c[1] + self.m_motion[1] * 10), 1)
-
-
-
-HANDLER.add_entity_auto(player.Player())
-
-# SC = serialize.SerializeState()
-# serialize.Serializable.save_to_file("test.json", SC.serialize(HANDLER))
-
+# serialize.save_to_file("test.json", state.CURRENT.serialize())
 
 # ------------ Game Loop ----------- #
 

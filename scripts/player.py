@@ -12,6 +12,7 @@ from engine import draw
 
 
 PLAYER_ANIMATION_PATH = "assets/animations/tomato/tomato.json"
+PLAYER_ENTITY_TYPE = "player_object"
 PLAYER_ANIMATION_DATA = None
 PLAYER_OBJECT_DATA = None
 
@@ -32,16 +33,18 @@ def __init__():
     PLAYER_OBJECT_DATA = handler.ObjectData(100, 100, 100, 100)
     PLAYER_ANIMATION_DATA = animation.create_animation_handler_from_json(PLAYER_ANIMATION_PATH)
 
-
 class Player(handler.PersistentObject):
     def __init__(self):
         """Player constructor"""
         super().__init__()
         
+        self.object_type = PLAYER_ENTITY_TYPE
+
+    def start(self):
+        """Start method"""
         PLAYER_OBJECT_DATA.set_object_params(self)
         self.animation = PLAYER_ANIMATION_DATA.get_registry()
         self.image = self.ani_registry.get_frame()
-        # set area
         self.rect.area = self.ani_registry.frame_dim
     
     def update(self, dt: float) -> None:
@@ -71,3 +74,5 @@ class Player(handler.PersistentObject):
         draw.DEBUG_DRAW_LINES(window.get_framebuffer(), (255, 0, 0), True, (self.rect.topleft, self.rect.topright, self.rect.bottomright, self.rect.bottomleft))
 
 
+# register player type
+handler.register_object_type(PLAYER_ENTITY_TYPE, Player)
