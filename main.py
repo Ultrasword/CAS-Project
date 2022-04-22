@@ -16,6 +16,8 @@ window.create_instance("Template", 1280, 720, f=pygame.RESIZABLE)
 window.set_scaling(True)
 window.change_framebuffer(1280, 720, pygame.SRCALPHA)
 
+# init stuff
+player.__init__()
 
 # handler object -> # TODO - abstract later 
 HANDLER = state.State()
@@ -80,8 +82,6 @@ class test(handler.PersistentObject):
         draw.DEBUG_DRAW_LINES(window.get_framebuffer(), (255, 0, 0), True, (self.rect.topleft, self.rect.topright, self.rect.bottomright, self.rect.bottomleft))
         draw.DEBUG_DRAW_LINE(window.get_framebuffer(), (255,0,0), c, (c[0] + self.m_motion[0] * 10, c[1] + self.m_motion[1] * 10), 1)
 
-
-player.__init__()
 
 
 HANDLER.add_entity_auto(player.Player())

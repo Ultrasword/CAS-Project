@@ -1,6 +1,7 @@
 import os
 import json
 from engine import filehandler
+from engine.globals import *
 
 
 ANIMATION_NAME = "name"
@@ -69,6 +70,16 @@ class AnimationRegistry:
         """Get the current frame"""
         return self.handler.images[self.frame]
 
+    def serialize(self) -> dict:
+        """
+        Serialize Animation Registry
+
+        - store the animatin registry key
+        """
+        result = {}
+        result[ANIMATION_PATH_KEY] = self.handler.json_path
+        result[ANIMATION_NAME_KEY] = self.handler.name
+        return result
 
 # -------------- image loading functions ------------- #
 
@@ -108,9 +119,24 @@ class AnimationHandler:
         """Register a registry to this animation handler"""
         return AnimationRegistry(self)
 
+    @staticmethod
+    def deserialize(data: dict):
+        """
+        Deserialize Animation Registry
+
+        - get data, decode, ez
+        """
+        return create_animation_handler_from_json(data[ANIMATION_PATH_KEY])
+        # print("Implement Deserializaetion for Animatino Registry please")
 
 def create_animation_handler_from_json(json_path: str) -> AnimationHandler:
     """Create an animatino handler object from json file"""
+    # check if already opened
+    global animation_handler_cache
+    if animation_handler_cache.get(json_path):
+        return animation_handler_cache[json_path]
+
+    # cont
     with open(json_path, 'r') as file:
         data = json.load(file)
         file.close()
@@ -136,4 +162,6 @@ def create_animation_handler_from_json(json_path: str) -> AnimationHandler:
             result_images.append(filehandler.scale(result, size))
     
     # create animation handler
-    return AnimationHandler(json_path, name, result_images, sizes if dif_sizes else [size for i in range(len(image_paths))], fps)
+    r = AnimationHandler(json_path, name, result_images, sizes if dif_sizes else [size for i in range(len(image_paths))], fps)
+    animation_handler_cache[json_path] = r
+    return r
