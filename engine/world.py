@@ -175,7 +175,7 @@ class Chunk:
         return self.chunk_id
     
     @staticmethod
-    def create_grid_tile(x: int, y: int, img: str, collide: int = 0, data: TileData = None) -> list:
+    def create_grid_tile(x: int, y: int, img: str, collide: int = 0, data: TileData = None):
         """
         Create a tile object
         
@@ -280,7 +280,7 @@ class World:
     def make_template_chunk(self, x: int, y: int) -> Chunk:
         """Make a default empty chunk"""
         self.chunks[x + (y << 16)] = Chunk((x, y))
-        return self.chunks[x + (y << 16)]
+        return self.get_chunk(x, y)
     
     def get_chunk(self, x: int, y: int) -> Chunk:
         """Get chunk from the world chunk cache"""
@@ -382,13 +382,16 @@ class World:
         object.p_motion[0] = object.m_motion[0]
         object.p_motion[1] = object.m_motion[1]
 
-        c_area = (area[0] // CHUNK_WIDTH_PIX, area[1] // CHUNK_HEIGHT_PIX)
+        c_area = (area[0] // CHUNK_WIDTH_PIX + 1, area[1] // CHUNK_HEIGHT_PIX + 1)
         t_rect = (object.rect.cx, object.rect.cy, object.rect.w // CHUNK_TILE_WIDTH, object.rect.h // CHUNK_TILE_HEIGHT)
 
         # loop through each chunk
-        chunks = [self.get_chunk(x, y) for x in range(object.rect.cx, object.rect.cx + c_area[0] + 1)
-            for y in range(object.rect.cy, object.rect.cy + c_area[1] + 1) if self.get_chunk(x, y)]
-        
+        chunks = []
+        for x in range(object.rect.cx - c_area[0], object.rect.cx + c_area[0] + 1):
+            for y in range(object.rect.cy - c_area[1], object.rect.cy + c_area[1] + 1):
+                if self.get_chunk(x, y):
+                    chunks.append(self.get_chunk(x, y))
+                
         # print(chunks)
 
         # move x
@@ -428,6 +431,10 @@ class World:
                         # moving left
                         object.rect.y = chunk.tile_map[yi][xi].y + CHUNK_TILE_HEIGHT + 0.1
                         object.m_motion[1] = 0    
+
+        # set object chunk position
+        object.rect.cx = int(object.rect.x // CHUNK_WIDTH_PIX)
+        object.rect.cy = int(object.rect.y // CHUNK_HEIGHT_PIX)
 
 
 # ------- register the tile type ---------- #

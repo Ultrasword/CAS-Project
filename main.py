@@ -26,28 +26,28 @@ state.push_state(HANDLER)
 
 # -------- testing ------ #
 
-# HANDLER = state.State()
-# state.push_state(HANDLER)
-# c = HANDLER.make_template_chunk(0, 0)
-# for x in range(CHUNK_WIDTH):
-#     c.set_tile_at(c.create_grid_tile(x, 6, "assets/terrain/dirt.png", 1))
-
-
-# HANDLER.add_entity_auto(player.Player())
-
-# serialize.save_to_file("test.json", state.CURRENT.serialize())
+c = HANDLER.make_template_chunk(1, 0)
+for x in range(CHUNK_WIDTH):
+    c.set_tile_at(c.create_grid_tile(x, 6, "assets/terrain/dirt.png", collide=True))
 
 # ------------ Game Loop ----------- #
 
-clock.start(fps=30)
+clock.start(fps=60)
 window.create_clock(clock.FPS)
 running = True
 while running:
     # fill instance
     window.fill_buffer(background)
 
+    # if reload 
+    if user_input.is_key_clicked(114): # ctrl + r
+        # reload
+        print("reload")
+        state.pop_state()
+        state.push_state(state.State.deserialize(serialize.load_json_data("test.json")))
+
     # updates
-    HANDLER.update(clock.delta_time)
+    state.CURRENT.update(clock.delta_time)
 
     # render
     window.push_buffer((0,0))
