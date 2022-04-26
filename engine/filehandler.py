@@ -1,21 +1,44 @@
 import pygame
+import json
+
+from dataclasses import dataclass
 
 # pygame flags
 SRC_ALPHA = pygame.SRCALPHA
 
 # TODO - design a resizing system when loading images
 
-images = {}
+
+# load json
+def get_json_data(path: str):
+    """Get the JSON data"""
+    with open(path, 'r') as file:
+        data = json.load(file)
+        file.close()
+    return data
+
+
+"""
+Images
+
+- for image files:
+    - png
+    - jpg
+
+Caches all the loaded image files unless using get_image_without_cache()
+"""
+
+IMAGES = {}
 
 def get_image(img):
     """get and image"""
-    if not images.get(img):
+    if not IMAGES.get(img):
         if img.endswith(".png"):
             image = pygame.image.load(img).convert_alpha()
         else:
             image = pygame.image.load(img).convert()
-        images[img] = image
-    return images[img]
+        IMAGES[img] = image
+    return IMAGES[img]
 
 
 def get_image_without_cache(img):
@@ -49,3 +72,78 @@ def crop_image(source, target, source_area):
     """Crop source onto target given areas"""
     target.blit(source, (0, 0), source_area)
 
+
+"""
+Fonts
+
+- loads fonts and stores them
+    - .ttf
+
+Fonts are cached and can be retrieved via get_font(string path)
+
+< ------ important -------- >
+When loading fonts, make sure to load from relative position from program
+
+- system fonts will not be loaded
+"""
+
+FONTS = {}
+
+class FontObject:
+    """
+    Font object
+    
+    - holds font path
+    - dict of all sizes of the font
+    """
+    def __init__(self, path: str):
+        """FontObject constructor"""
+        self.size = {}
+        self.path = path
+
+    def get_font_size(self, font_size: int):
+        """Get a font size"""
+        if not self.size.get(font_size):
+            self.size[font_size] = pygame.font.Font(self.path, font_size)
+        return self.size[font_size]
+
+
+def get_font(path: str):
+    """Get a font"""
+    if not FONTS.get(path):
+        FONTS[path] = FontObject(path)
+    return FONTS[path]
+
+
+"""
+Audio/Music
+
+- loads music files:
+    - mp3
+    - wav
+    - ogg
+
+pygame.mixer objects are cached
+"""
+
+# audio documentation
+#   https://www.pygame.org/docs/ref/mixer.html#pygame.mixer.Sound
+#   https://www.pygame.org/docs/ref/music.html
+AUDIO = {}
+
+# channel documentation:
+#   https://www.pygame.org/docs/ref/mixer.html#pygame.mixer.Channel
+CHANNELS = {}
+
+def get_audio(path: str):
+    """Get and cache audio"""
+    if not AUDIO.get(path):
+        AUDIO[path] = pygame.mixer.Sound(path)
+    return AUDIO[path]
+
+
+def create_channel(channel: int):
+    """Create an audio channel"""
+    if not CHANNELS.get(channel):
+        CHANNELS[channel] = pygame.mixer.Channel(channel)
+    return CHANNELS[channel]

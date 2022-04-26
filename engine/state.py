@@ -102,8 +102,8 @@ def previous_state(state: State) -> None:
         CURRENT = STATEQUEUE[-1]
 
 
+
 def pop_state():
     """Pop a state"""
     STATEQUEUE.pop()
-
 

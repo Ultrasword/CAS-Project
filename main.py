@@ -20,15 +20,19 @@ window.change_framebuffer(1280, 720, pygame.SRCALPHA)
 player.__init__()
 
 # handler object -> # TODO - abstract later 
-HANDLER = state.State.deserialize(serialize.load_json_data("test.json"))
+HANDLER = state.State.deserialize(serialize.load_json_data("leveltest.json"))
 state.push_state(HANDLER)
 
 
-# -------- testing ------ #
+# -------- testing ---------------------- #
 
 c = HANDLER.make_template_chunk(1, 0)
 for x in range(CHUNK_WIDTH):
     c.set_tile_at(c.create_grid_tile(x, 6, "assets/terrain/dirt.png", collide=True))
+
+
+# -------------------------------------- #
+
 
 # ------------ Game Loop ----------- #
 
@@ -44,7 +48,7 @@ while running:
         # reload
         print("reload")
         state.pop_state()
-        state.push_state(state.State.deserialize(serialize.load_json_data("test.json")))
+        state.push_state(state.State.deserialize(serialize.load_json_data("leveltest.json")))
 
     # updates
     state.CURRENT.update(clock.delta_time)
