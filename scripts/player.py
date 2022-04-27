@@ -71,7 +71,7 @@ class Player(handler.PersistentObject):
     def render(self):
         """Render function"""
         window.draw_buffer(self.image, self.rect.pos)
-        draw.DEBUG_DRAW_LINES(window.get_framebuffer(), (255, 0, 0), True, (self.rect.topleft, self.rect.topright, self.rect.bottomright, self.rect.bottomleft))
+        draw.DEBUG_DRAW_RECT(window.get_framebuffer(), self.rect)
 
 
 # register player type

@@ -1,6 +1,6 @@
 import os
 import json
-from engine import filehandler
+from engine import filehandler, spritesheet
 from engine.globals import *
 
 
@@ -79,6 +79,7 @@ class AnimationRegistry:
         result = {}
         result[ANIMATION_PATH_KEY] = self.handler.json_path
         result[ANIMATION_NAME_KEY] = self.handler.name
+        result[ANIMATION_ISSPRITESHEET_KEY] = self.handler.is_spritesheet
         return result
 
 # -------------- image loading functions ------------- #
@@ -96,7 +97,7 @@ def load_image_list(base: str, images: list, ext: str = "", pre: str = "")-> lis
 
 
 class AnimationHandler:
-    def __init__(self, json_path: str, name: str, images: list, image_sizes: list, fps: int):
+    def __init__(self, json_path: str, name: str, images: list, image_sizes: list, fps: int, is_spritesheet: bool = False):
         """
         Animation Handler constructor
         
@@ -115,6 +116,8 @@ class AnimationHandler:
         self.frame_time = 1/fps
         self.frame_count = len(images)
 
+        self.is_spritesheet = is_spritesheet
+
     def get_registry(self) -> AnimationRegistry:
         """Register a registry to this animation handler"""
         return AnimationRegistry(self)
@@ -126,8 +129,11 @@ class AnimationHandler:
 
         - get data, decode, ez
         """
+        if data[ANIMATION_ISSPRITESHEET_KEY]:
+            return create_animation_handler_from_sprite_sheet(data[ANIMATION_PATH_KEY])
         return create_animation_handler_from_json(data[ANIMATION_PATH_KEY])
         # print("Implement Deserializaetion for Animatino Registry please")
+
 
 def create_animation_handler_from_json(json_path: str) -> AnimationHandler:
     """Create an animatino handler object from json file"""
@@ -150,7 +156,6 @@ def create_animation_handler_from_json(json_path: str) -> AnimationHandler:
     size = data.get("size")
     
     dif_sizes = sizes != None
-
     # load images
     result_images = []
     for i, result in enumerate(iterate_load_image_list(base_path, image_paths, ext=ext, pre=pre)):
@@ -165,3 +170,41 @@ def create_animation_handler_from_json(json_path: str) -> AnimationHandler:
     r = AnimationHandler(json_path, name, result_images, sizes if dif_sizes else [size for i in range(len(image_paths))], fps)
     animation_handler_cache[json_path] = r
     return r
+
+
+def create_animation_handler_from_sprite_sheet(json_path: str) -> AnimationHandler:
+    """Create an animation handler from sprite sheet json"""
+    # check if already opened
+    global animation_handler_cache
+    if animation_handler_cache.get(json_path):
+        return animation_handler_cache[json_path]
+    
+    # open
+    with open(json_path, 'r') as file:
+        data = json.load(file)
+        file.close()
+    
+    name = data["name"]
+    base_path = data["base_path"]
+    image_path = data["image"]
+    sprite_area = data["sprite_area"]
+    fps = data["fps"]
+    size = data["size"]
+    spacing = data["spacing"]
+    pre = data.get("pre", "")
+    ext = data.get("ext", "")
+
+    # create sprite sheet
+    sprite_sheet = spritesheet.get_sprite_sheet(os.path.join(base_path, (pre if pre else "") + image_path +( ext if ext else "")), 
+                sprite_area[0], sprite_area[1], spacing_x=spacing[0], spacing_y=spacing[1])
+
+    # resize all images
+    resized = []
+    for img in sprite_sheet.iterate_images():
+        resized.append(filehandler.scale(img.tex, size))
+
+    # create animation handler
+    result = AnimationHandler(json_path, name, resized, [size] * len(resized), fps, is_spritesheet=True)
+    animation_handler_cache[json_path] = result
+    return result
+

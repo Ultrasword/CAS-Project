@@ -28,6 +28,7 @@ CHUNK_POS_KEY = "pos"
 
 ANIMATION_PATH_KEY = "a_path"
 ANIMATION_NAME_KEY = "a_name"
+ANIMATION_ISSPRITESHEET_KEY = "a_spritesheet?"
 
 RECT_X_KEY = "x"
 RECT_Y_KEY = "y"
