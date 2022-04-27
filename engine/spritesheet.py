@@ -16,11 +16,20 @@ from dataclasses import dataclass
 # ------------ all loaded sprite sheets thing ----------- #
 
 SPRITE_SHEETS_CONTAINER = {}
+SPRITE_SHEETS_CACHE = {}
 
 def register_sprite_sheet(sprite_sheet_name, sprite_sheet_object):
     """Register the sprite sheet object to global sprite sheet cache"""
     SPRITE_SHEETS_CONTAINER[sprite_sheet_name] = sprite_sheet_object
 
+
+def get_sprite_sheet(path: str, s_width: int, s_height: int, spacing_x: int = 0, spacing_y: int = 0):
+    """Get a sprite sheet"""
+    if SPRITE_SHEETS_CACHE.get(path):
+        return SPRITE_SHEETS_CACHE[path]
+    obj = SpriteSheet(path, s_width, s_height, spacing_x, spacing_y)
+    SPRITE_SHEETS_CACHE[path] = obj
+    return obj
 
 # ------------ SpriteData ----------------- #
 
@@ -153,6 +162,8 @@ class SpriteSheet:
         # get sprite count
         
         self.sprite_count = 0
+        self.sprite_x_count = self.area[0] // self.sprite_area[0]
+        self.sprite_y_count = self.area[1] // self.sprite_area[1]
 
         # load the images
         self.create()

@@ -25,7 +25,8 @@ def update():
     end_time = time.time()
     delta_time = end_time - start_time
     if delta_time < frame_time:
-        time.sleep(frame_time - delta_time)
+        wait_time = frame_time - delta_time
+        time.sleep(wait_time)
         delta_time = frame_time
     start_time = time.time()
 

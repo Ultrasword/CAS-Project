@@ -219,7 +219,7 @@ class Object:
         # object identification
         self.object_id = 0
         self.object_type = object_type_name
-        self.string_identifier = ""
+        self.name = ""
         
         # standard variables - this is just the object rect 
         self.rect = Rect(0, 0, 0, 0)
@@ -291,7 +291,7 @@ class Object:
         """
         result = {}
         result[ENTITY_RECT_KEY] = self.rect.serialize()
-        result[ENTITY_STRING_IDENTIFIER_KEY] = self.string_identifier
+        result[ENTITY_STRING_IDENTIFIER_KEY] = self.name
         result[ENTITY_ANIMATION_KEY] = None
         if self.ani_registry:
             result[ENTITY_ANIMATION_KEY] = self.ani_registry.serialize()
@@ -334,11 +334,12 @@ class Object:
         e_type = OBJECT_TYPE_ACCESS_CONTAINER[data[ENTITY_TYPE_KEY]]        # is a dict
         # create object
         result = e_type[0]()
-        result.string_identifier = data[ENTITY_STRING_IDENTIFIER_KEY]
+        result.name = data[ENTITY_STRING_IDENTIFIER_KEY]
         # rect
         result.rect = Rect.deserialize(data[ENTITY_RECT_KEY])
         # animation
-        result.ani_registry = animation.AnimationHandler.deserialize(data[ENTITY_ANIMATION_KEY]).get_registry()
+        if data[ENTITY_ANIMATION_KEY]:
+            result.ani_registry = animation.AnimationHandler.deserialize(data[ENTITY_ANIMATION_KEY]).get_registry()
         # set variables
         result.setup_data(data[ENTITY_DATA_KEY])
 

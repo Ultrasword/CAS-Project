@@ -7,6 +7,8 @@ PREV_WIDTH, PREV_HEIGHT, PREV_FLAGS, PREV_DEPTH, PREV_VSYNC = 0, 0, 0, 0, 0
 
 INITIALIZED = False
 FRAMEBUFFER = None
+FB_WIDTH, FB_HEIGHT = 0, 0
+
 INSTANCE = None
 WIDTH, HEIGHT = 0, 0
 FLAGS = 0
@@ -24,14 +26,14 @@ XSCALE, YSCALE = 1, 1
 # static file
 def create_instance(t: int, w: int, h: int, f: int = 0, b: int = 32, v: int = 1, framebuffer=False):
     """Only one window instance is available at a time"""
-    global INITIALIZED, WIDTH, HEIGHT, FLAGS, DEPTH, VSYNC, INSTANCE, ORIGINAL_HEIGHT, ORIGINAL_WIDTH, FRAMEBUFFER
+    global INITIALIZED, WIDTH, HEIGHT, FLAGS, DEPTH, VSYNC, INSTANCE, ORIGINAL_HEIGHT, ORIGINAL_WIDTH, FRAMEBUFFER, FB_WIDTH, FB_HEIGHT
     if not INITIALIZED:
         ORIGINAL_WIDTH, ORIGINAL_HEIGHT = w, h
         pygame.init()
         INITIALIZED = True
         INSTANCE = pygame.display.set_mode((w, h), flags=f, depth=b, vsync=v)
         if framebuffer:
-            FRAMEBUFFER = pygame.Surface((w, h)).convert()
+            change_framebuffer(w, h, f)
         pygame.display.set_caption(t)
     else:
         INSTANCE = pygame.display.set_mode((w, h), flags=f, depth=b, vsync=v)
@@ -77,8 +79,10 @@ def fill_instance(color: tuple) -> None:
 
 def change_framebuffer(w: int, h: int, f: int) -> None:
     """change a framebuffer"""
-    global FRAMEBUFFER
+    global FRAMEBUFFER, FB_WIDTH, FB_HEIGHT
     FRAMEBUFFER = pygame.Surface((w, h), flags=f).convert()
+    FB_WIDTH = w
+    FB_HEIGHT = h
 
 
 def get_framebuffer():
@@ -131,3 +135,8 @@ def draw(surface, pos: tuple) -> None:
     global INSTANCE_CHANGED
     INSTANCE_CHANGED = True
     INSTANCE.blit(surface, pos)
+
+
+def mouse_window_to_framebuffer(mouse_pos: tuple) -> tuple:
+    """Return the framebuffer coords of the mouse"""
+    return (mouse_pos[0] / WIDTH * FB_WIDTH, mouse_pos[1] / HEIGHT * FB_HEIGHT)

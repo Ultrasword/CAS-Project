@@ -147,3 +147,25 @@ def create_channel(channel: int):
     if not CHANNELS.get(channel):
         CHANNELS[channel] = pygame.mixer.Channel(channel)
     return CHANNELS[channel]
+
+
+class AudioRegistry:
+    """
+    Registry for a singular audio source
+    """
+    
+    def __init__(self, audio_path: str):
+        """Audio Registry constructor"""
+        self.audio_path = audio_path
+        # load audio
+        self.audio_data = get_audio(audio_path)
+    
+    def play_audio(self, volume: int = 1, channel: int = 0, loops: int = 0, maxtime: int = 0, fadetime: int = 0):
+        """Play the audio given volume and channel"""
+        CHANNELS[channel].set_volume(volume / 100)
+        CHANNELS[channel].play(self.audio_data, loops, maxtime, fadetime)
+    
+    def serialize(self):
+        """Serialize method for AudioRegistry"""
+        pass
+
