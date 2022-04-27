@@ -101,13 +101,13 @@ class Tile:
         self.tilestats = data
         self.data = {}
 
-    def render(self, images: dict, offset: tuple = (0, 0)) -> None:
+    def render(self, surface, images: dict, offset: tuple = (0, 0)) -> None:
         """Render function for this tile"""
         # I have no idea if this will be slower
         # i don't know how python function stack works 
         # if has intelligence on this topic, please inform me :D
         if self.img:
-            window.FRAMEBUFFER.blit(images[self.img], (self.x + offset[0], self.y + offset[1]))
+            surface.blit(images[self.img], (self.x + offset[0], self.y + offset[1]))
     
     def cache_image(self, cache) -> None:
         """Cache the image"""
@@ -200,7 +200,7 @@ class Chunk:
         for x in range(CHUNK_WIDTH):
             for y in range(CHUNK_HEIGHT):
                 # get block data
-                self.tile_map[y][x].render(self.images, offset=offset)
+                self.tile_map[y][x].render(window.FRAMEBUFFER, self.images, offset=offset)
 
     def is_collide(self, x: int, y: int, rect) -> bool:
         """Check if a block is collided with the chunk block"""
