@@ -107,11 +107,10 @@ class SpriteTile(Tile):
         self.data[SPRITETILE_SHEET_DATA_KEY] = sprite_data.parent_object.get_data()# an array of length 3
         self.data[SPRITETILE_SHEET_INDEX_KEY] = sprite_data.index
 
-
-    def render(self, images: dict, offset: tuple = (0, 0)) -> None:
+    def render(self, surface, images: dict, offset: tuple = (0, 0)) -> None:
         """Render function for this sprite tile"""
         if self.img:
-            window.FRAMEBUFFER.blit(images[self.sprite_hashed_name], (self.x + offset[0], self.y + offset[1]))
+            surface.blit(images[self.sprite_hashed_name], (self.x + offset[0], self.y + offset[1]))
     
     def cache_image(self, cache: dict) -> None:
         """Cache the image"""

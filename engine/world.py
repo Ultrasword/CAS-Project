@@ -200,7 +200,7 @@ class Chunk:
         for x in range(CHUNK_WIDTH):
             for y in range(CHUNK_HEIGHT):
                 # get block data
-                self.tile_map[y][x].render(window.FRAMEBUFFER, self.images, offset=offset)
+                self.tile_map[y][x].render(window.FRAMEBUFFER, self.images, offset)
 
     def is_collide(self, x: int, y: int, rect) -> bool:
         """Check if a block is collided with the chunk block"""

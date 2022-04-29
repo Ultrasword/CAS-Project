@@ -20,13 +20,13 @@ window.change_framebuffer(1280, 720, pygame.SRCALPHA)
 player.__init__()
 
 # handler object -> # TODO - abstract later 
-HANDLER = state.State.deserialize(serialize.load_json_data("leveltest.json"))
+HANDLER = state.State.deserialize(serialize.load_json_data("test.json"))
 state.push_state(HANDLER)
 
 
 # -------- testing ---------------------- #
 
-c = HANDLER.make_template_chunk(1, 0)
+c = HANDLER.get_chunk(1, 0)
 for x in range(CHUNK_WIDTH):
     c.set_tile_at(c.create_grid_tile(x, 6, "assets/terrain/dirt.png", collide=True))
 
